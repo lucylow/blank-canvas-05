@@ -84,6 +84,28 @@ export default function LolMatches() {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">League of Legends Matches</h1>
 
+      {/* League of Legends visual banner */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <img
+          src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg"
+          alt="League of Legends - Ahri splash art"
+          className="w-full h-40 object-cover rounded-lg border"
+          loading="lazy"
+        />
+        <img
+          src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Garen_0.jpg"
+          alt="League of Legends - Garen splash art"
+          className="w-full h-40 object-cover rounded-lg border hidden sm:block"
+          loading="lazy"
+        />
+        <img
+          src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg"
+          alt="League of Legends - Lux splash art"
+          className="w-full h-40 object-cover rounded-lg border hidden sm:block"
+          loading="lazy"
+        />
+      </div>
+
       {matches.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center">

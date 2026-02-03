@@ -87,6 +87,28 @@ export default function ValorantMatches() {
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">Valorant Matches</h1>
+
+      {/* Valorant visual banner */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <img
+          src="https://images.unsplash.com/photo-1598126215452-6d6a0ae73954?q=80&w=1200&auto=format&fit=crop"
+          alt="Valorant gameplay scene"
+          className="w-full h-40 object-cover rounded-lg border"
+          loading="lazy"
+        />
+        <img
+          src="https://images.unsplash.com/photo-1606117331172-e7aa3c2d6b5b?q=80&w=1200&auto=format&fit=crop"
+          alt="Valorant esports stage"
+          className="w-full h-40 object-cover rounded-lg border hidden sm:block"
+          loading="lazy"
+        />
+        <img
+          src="https://images.unsplash.com/photo-1571172964533-d2d13f662b3a?q=80&w=1200&auto=format&fit=crop"
+          alt="FPS action aesthetic"
+          className="w-full h-40 object-cover rounded-lg border hidden sm:block"
+          loading="lazy"
+        />
+      </div>
       
       {matches.length === 0 ? (
         <Card>
