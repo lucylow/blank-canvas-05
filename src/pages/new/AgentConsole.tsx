@@ -51,7 +51,7 @@ export function AgentConsole() {
             value={prompt} 
             onChange={(e) => setPrompt(e.target.value)} 
             rows={2}
-            placeholder="Enter your prompt..."
+            placeholder="Try: [Valorant] Predict their A-site hit timing next round • [LoL] Identify our weakest objective setups this game"
           />
           <div className="flex gap-2">
             <Button onClick={() => { reset(); setUrl(startAgentStreamUrl(prompt)); }}>

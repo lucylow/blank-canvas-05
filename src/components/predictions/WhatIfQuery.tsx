@@ -339,7 +339,7 @@ export const WhatIfQuery: React.FC<WhatIfQueryProps> = ({
             <Label htmlFor="natural-query">Or ask in natural language:</Label>
             <Textarea
               id="natural-query"
-              placeholder="e.g., 'What if we saved in round 4 instead of force-buying?'"
+              placeholder="Try: [Valorant] What if we saved in round 4 after no plant? • [LoL] What if we traded Herald for bot plates at 10:00?"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               rows={2}

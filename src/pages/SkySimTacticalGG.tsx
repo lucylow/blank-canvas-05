@@ -389,7 +389,7 @@ const WhatIfPredictor: React.FC<{
           <div>
             <label className="text-sm font-medium mb-2 block">Scenario Query</label>
             <Textarea
-              placeholder="e.g., What if we rotated to B site instead of A in round 7?"
+              placeholder="e.g., [Valorant] Rotate to B instead of A in round 7 • [LoL] 4-man dive bot at 12:30 with Herald"
               value={scenario}
               onChange={(e) => setScenario(e.target.value)}
               className="min-h-[100px]"

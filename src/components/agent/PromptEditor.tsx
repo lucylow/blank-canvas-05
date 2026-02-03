@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAgent } from '@/context/AgentContext';
 
 const samplePrompts = [
+  '[Valorant] Analyze enemy economy and predict their A-site execute timing',
+  '[LoL] Evaluate Baron pit vision control and suggest a bait setup',
   'Analyze player performance trends and suggest improvements',
   'Search for patterns in recent match data',
   'Help me understand team coordination issues',
@@ -35,7 +37,7 @@ export const PromptEditor: React.FC = () => {
         value={promptDraft}
         onChange={(e) => setPromptDraft(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Try: Audit product catalog and suggest 3 quick UI changes that increase CTR"
+        placeholder="Try: [Valorant] What's our win rate when we buy Op on round 3? or [LoL] Show me late-game power spikes for our current comp"
         className="min-h-[120px] bg-background/50 border-border/50 resize-none focus:border-primary/50"
         disabled={isRunning}
         aria-label="Prompt editor for AI agent"
