@@ -174,5 +174,29 @@ app.get('/replay/lol/:id/stream', (req, res) => {
 /* ---------------- default / static --------------- */
 app.get('/api/health', (req, res) => res.json({ ok: true, timestamp: Date.now() }));
 
+/* -------------- XGBoost Objective Decision API -------------- */
+app.post('/api/objective-decision', async (req, res) => {
+  const { matchId, timestamp } = req.body;
+  
+  // In a real TS environment we would use ObjectiveCoachDashboard
+  // Here in JS mock server, we simulate the response
+  const winProb = 0.68;
+  const confidence = 0.92;
+  
+  res.send({
+    coachCall: "Baron start",
+    recommendation: "SECURE",
+    confidence: `${Math.round(confidence * 100)}%`,
+    winProb: `${Math.round(winProb * 100)}%`,
+    riskTier: winProb > 0.65 ? 'AGGRESSIVE' : (winProb > 0.45 ? 'BALANCED' : 'CONSERVATIVE'),
+    topReasons: [
+      'Numbers 4v2 (+4.8%)',
+      'Vision 3-1 (+3.2%)',
+      'Smite ready (+1.4%)'
+    ],
+    urgency: "IMMEDIATE"
+  });
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Mock server listening on http://localhost:${PORT}`));

@@ -7,7 +7,7 @@ export const Timeline: React.FC = () => {
   const { timeline } = useAgent();
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-tour="agent-timeline">
       <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
         <Clock className="w-4 h-4 text-primary" />
         Timeline

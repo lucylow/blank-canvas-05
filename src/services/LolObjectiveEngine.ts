@@ -117,24 +117,35 @@ export class LolObjectiveEngine {
   private calculatePSuccess(state: ObjectiveState): number {
     let score = 0;
 
-    // Numbers advantage (25%)
-    score += Math.max(0, (state.allyCountNear - state.enemyCountNear) * 0.125);
+    const isFlex = state.queueType === 'FLEX';
+
+    // Tunable weights with queue-specific adjustments
+    const numbersWeight = isFlex ? 0.275 : 0.25; // Flex favors grouped fights
+    const visionMax = isFlex ? 0.25 : 0.18; // Vision matters more in Flex
+    const visionPerWardDelta = isFlex ? 0.125 : 0.09;
+    const ultMax = isFlex ? 0.22 : 0.2; // Slightly more weight in Flex
+    const smiteWeight = 0.1; // unchanged
+    const hpWeight = isFlex ? 0.08 : 0.12; // Solo relies more on individual HP checks
+    const goldMax = 0.15; // unchanged
+
+    // Numbers advantage (~25-27.5%)
+    score += Math.max(0, (state.allyCountNear - state.enemyCountNear) * (numbersWeight / 2));
     
-    // Vision control (20%)
-    score += Math.min(0.2, (state.visionInPit - state.enemyVisionInPit) * 0.1);
+    // Vision control (~18-25%)
+    score += Math.min(visionMax, (state.visionInPit - state.enemyVisionInPit) * (visionPerWardDelta / 1.25));
     
     // Gold advantage (15%) - scaled to 10k diff
-    score += Math.max(-0.15, Math.min(0.15, state.teamGoldDiff / 10000 * 0.15));
+    score += Math.max(-goldMax, Math.min(goldMax, (state.teamGoldDiff / 10000) * goldMax));
     
-    // Ultimates (20%)
-    score += Math.min(0.2, (state.ultimatesUp - state.enemyUltimatesUp) * 0.1);
+    // Ultimates (20-22%)
+    score += Math.min(ultMax, (state.ultimatesUp - state.enemyUltimatesUp) * (ultMax / 2));
     
     // Smite edge (10%)
-    if (state.smiteReady && !state.enemySmiteReady) score += 0.1;
-    if (!state.smiteReady && state.enemySmiteReady) score -= 0.1;
+    if (state.smiteReady && !state.enemySmiteReady) score += smiteWeight;
+    if (!state.smiteReady && state.enemySmiteReady) score -= smiteWeight;
     
-    // Health/state (10%)
-    score += (state.playerHpPercent / 100) * 0.1;
+    // Health/state (8-12%)
+    score += (state.playerHpPercent / 100) * hpWeight;
     
     return Math.min(0.98, Math.max(0.02, 0.5 + score));
   }

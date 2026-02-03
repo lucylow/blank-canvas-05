@@ -10,9 +10,25 @@ import { Timeline } from '@/components/agent/Timeline';
 import { MemoryPanel } from '@/components/agent/MemoryPanel';
 import { EventsLog } from '@/components/agent/EventsLog';
 import { OnboardingTour, aiPlaygroundTourSteps } from '@/components/ui/onboarding-tour';
+import { useUndoToast } from '@/components/ui/undo-toast';
 
 const PlaygroundContent: React.FC = () => {
-  const { clearMessages, isRunning } = useAgent();
+  const { messages, timeline, eventsLog, setMessages, setTimeline, setEventsLog, clearMessages, isRunning } = useAgent();
+  const { showUndoToast } = useUndoToast();
+
+  const handleClear = () => {
+    const previousMessages = [...messages];
+    const previousTimeline = [...timeline];
+    const previousEvents = [...eventsLog];
+
+    clearMessages();
+
+    showUndoToast('History cleared', () => {
+      setMessages(previousMessages);
+      setTimeline(previousTimeline);
+      setEventsLog(previousEvents);
+    });
+  };
 
   return (
     <div className="min-h-screen p-6 space-y-6">
@@ -30,7 +46,7 @@ const PlaygroundContent: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={clearMessages} disabled={isRunning}>
+          <Button variant="outline" size="sm" onClick={handleClear} disabled={isRunning}>
             <RotateCcw className="w-4 h-4 mr-2" />
             Clear
           </Button>

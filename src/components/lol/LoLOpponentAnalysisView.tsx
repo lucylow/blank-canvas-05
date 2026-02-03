@@ -13,7 +13,8 @@ import {
   Clock,
   Sword,
   TrendingUp,
-  MessageSquare
+  MessageSquare,
+  ListChecks
 } from 'lucide-react';
 import { LoLOpponentAnalysisOutput } from '@/types/lolAgents';
 
@@ -163,6 +164,42 @@ export const LoLOpponentAnalysisView: React.FC<LoLOpponentAnalysisViewProps> = (
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Exploitable Patterns (optional) */}
+      {analysis.exploitable_patterns && analysis.exploitable_patterns.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <ListChecks className="w-4 h-4" /> Exploitable Patterns
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[300px]">
+              <div className="space-y-3">
+                {analysis.exploitable_patterns.map((p) => (
+                  <div key={p.id} className="p-3 rounded-md border">
+                    <div className="flex items-center justify-between">
+                      <div className="font-semibold text-sm">{p.category}: {p.pattern}</div>
+                      <Badge variant="outline" className="text-[10px] uppercase">{p.severity}</Badge>
+                    </div>
+                    {p.what_you_see && p.what_you_see.length > 0 && (
+                      <ul className="list-disc pl-5 mt-2 text-xs text-muted-foreground">
+                        {p.what_you_see.map((w, i) => (<li key={i}>{w}</li>))}
+                      </ul>
+                    )}
+                    <div className="mt-2">
+                      <div className="text-xs font-medium">Exploit:</div>
+                      <ul className="list-disc pl-5 text-xs">
+                        {p.exploit.map((e, i) => (<li key={i}>{e}</li>))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="bg-muted p-4 rounded-lg">
         <div className="flex items-center gap-2 mb-2">

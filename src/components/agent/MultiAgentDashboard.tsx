@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { OnboardingTour, type TourStep } from '@/components/ui/onboarding-tour';
 import {
   AlertTriangle,
   Target,
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 import { LoLOpponentAnalysisView } from '@/components/lol/LoLOpponentAnalysisView';
 import { LoLQueueComparisonView } from '@/components/lol/LoLQueueComparisonView';
+import { ValorantOpponentAnalysisView } from '@/components/valorant/ValorantOpponentAnalysisView';
 import { backendApi } from '@/services/backendApi';
 import type {
   AgentOrchestrationResponse,
@@ -48,6 +50,7 @@ const agentIcons: Record<AgentRole, React.ReactNode> = {
   lol_opponent_analysis: <Eye className="w-5 h-5" />,
   lol_queue_analyst: <Users className="w-5 h-5" />,
   worst_case_simulator: <ShieldAlert className="w-5 h-5" />,
+  valorant_opponent_analysis: <Eye className="w-5 h-5" />,
 };
 
 const agentNames: Record<AgentRole, string> = {
@@ -59,6 +62,7 @@ const agentNames: Record<AgentRole, string> = {
   lol_opponent_analysis: 'LoL Opponent Analysis',
   lol_queue_analyst: 'LoL Queue Strategy Analyst',
   worst_case_simulator: 'Worst-Case Simulator',
+  valorant_opponent_analysis: 'Valorant Opponent Analysis',
 };
 
 const agentColors: Record<AgentRole, string> = {
@@ -70,7 +74,32 @@ const agentColors: Record<AgentRole, string> = {
   lol_opponent_analysis: 'bg-violet-500/10 text-violet-500 border-violet-500/20',
   lol_queue_analyst: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
   worst_case_simulator: 'bg-pink-500/10 text-pink-500 border-pink-500/20',
+  valorant_opponent_analysis: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
 };
+
+const multiAgentTourSteps: TourStep[] = [
+  {
+    id: 'dashboard-overview',
+    title: 'Multi-Agent Dashboard',
+    content: 'View synthesized insights from all specialized AI agents working in parallel.',
+    target: '[data-tour="agent-dashboard"]',
+    position: 'bottom',
+  },
+  {
+    id: 'agent-tabs',
+    title: 'Specialized Views',
+    content: 'Switch between detailed views for specific games (LoL, VALORANT) or combined insights.',
+    target: '[data-tour="agent-tabs"]',
+    position: 'bottom',
+  },
+  {
+    id: 'combined-insights',
+    title: 'Strategic Recommendations',
+    content: 'The "Combined Insights" tab synthesizes cross-agent data into prioritized actions.',
+    target: '[data-tour="insights-tab-trigger"]',
+    position: 'top',
+  },
+];
 
 export const MultiAgentDashboard: React.FC<MultiAgentDashboardProps> = ({
   gridData = [],
@@ -96,7 +125,8 @@ export const MultiAgentDashboard: React.FC<MultiAgentDashboardProps> = ({
           'predictive_playbook',
           'prosthetic_coach',
           'lol_opponent_analysis' as any,
-                    'lol_queue_analyst' as any,
+          'lol_queue_analyst' as any,
+          'valorant_opponent_analysis' as any,
           'worst_case_simulator',
         ],
         input: {
@@ -180,7 +210,7 @@ export const MultiAgentDashboard: React.FC<MultiAgentDashboardProps> = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-tour="agent-dashboard">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -195,11 +225,14 @@ export const MultiAgentDashboard: React.FC<MultiAgentDashboardProps> = ({
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5" data-tour="agent-tabs">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="agents">Agents</TabsTrigger>
-              <TabsTrigger value="insights">Combined Insights</TabsTrigger>
+              <TabsTrigger value="insights" data-tour="insights-tab-trigger">
+                Combined Insights
+              </TabsTrigger>
               <TabsTrigger value="lol_analysis">LoL Analysis</TabsTrigger>
+              <TabsTrigger value="valorant_analysis">Valorant Analysis</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
@@ -363,9 +396,27 @@ export const MultiAgentDashboard: React.FC<MultiAgentDashboardProps> = ({
                 </div>
               </ScrollArea>
             </TabsContent>
+
+            <TabsContent value="valorant_analysis" className="space-y-4">
+              <ScrollArea className="h-[600px]">
+                <div className="space-y-4">
+                  {orchestrationResult.agent_outputs.find(o => o.agent_name === 'Valorant Opponent Analysis Agent') ? (
+                    <ValorantOpponentAnalysisView 
+                      analysis={orchestrationResult.agent_outputs.find(o => o.agent_name === 'Valorant Opponent Analysis Agent') as any} 
+                    />
+                  ) : (
+                    <div className="text-center py-10 text-muted-foreground">
+                      Valorant Opponent Analysis data not available in this run.
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
+
+      <OnboardingTour steps={multiAgentTourSteps} storageKey="multi-agent-dashboard-tour" />
     </div>
   );
 };

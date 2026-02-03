@@ -16,6 +16,9 @@ interface AgentContextType extends AgentState {
   runAgent: (prompt?: string) => void;
   stopAgent: () => void;
   clearMessages: () => void;
+  setMessages: (messages: AgentMessage[]) => void;
+  setTimeline: (timeline: TimelineItem[]) => void;
+  setEventsLog: (events: AgentEvent[]) => void;
   addMemory: (text: string) => void;
   removeMemory: (id: string) => void;
 }
@@ -164,6 +167,9 @@ export const AgentProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       runAgent,
       stopAgent,
       clearMessages,
+      setMessages,
+      setTimeline,
+      setEventsLog,
       addMemory,
       removeMemory
     }}>

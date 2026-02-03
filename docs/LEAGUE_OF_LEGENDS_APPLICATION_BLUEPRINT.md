@@ -178,7 +178,8 @@ Your pattern recognition engine, already proven on tactical FPS games, adapts na
 
 #### Third-Party Analytic Feeds
 
-- **Tracker websites**: op.gg, u.gg, porofessor.gg (public match data enrichment)
+- **Tracker websites**: [U.GG](docs/UGG_IMPROVEMENT_GUIDE.md), op.gg, porofessor.gg (public match data enrichment)
+- **Market Comparison**: [Tracker.gg vs Lolalytics](docs/TRACKER_VS_LOLALYTICS.md)
 - **Community parsers**: Additional context on meta trends, champion performance
 - **Usage**: Enrichment layer for context (patch meta, champion win rates, item builds)
 - **Integration**: Optional enrichment service that fetches and merges third-party data
@@ -1210,7 +1211,7 @@ Your AI Assistant Coach platform is uniquely positioned to transform LoL perform
 **Key Advantages**:
 
 1. **Proven architecture**: Your existing platform (FastAPI, React, ML pipeline, explainability) adapts directly to LoL
-2. **Strong market fit**: LoL's coach/analyst culture, event-rich data, and high ROI per marginal improvement create strong demand
+2. **Strong market fit**: LoL's coach/analyst culture, event-rich data, and high ROI per marginal improvement create strong demand ([Market Comparison: Tracker.gg vs Lolalytics](TRACKER_VS_LOLALYTICS.md))
 3. **Differentiated value**: Explainable AI, evidence-backed insights, and drill-to-measurement loops differentiate from generic analytics tools
 
 **Next Steps**:

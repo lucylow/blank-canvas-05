@@ -18,6 +18,7 @@ import { LoLOpponentAnalysisAgent } from './lolOpponentAnalysis';
 import { LoLGatherStrategyAgent } from './lolGatherStrategy';
 import { MechanicalSkillAnalystAgent } from './mechanicalSkillAnalyst';
 import { LoLQueueAnalystAgent } from './lolQueueAnalyst';
+import { ValorantOpponentAnalysisAgent } from './valorantOpponentAnalysis';
 
 /**
  * Agent registry - maps roles to agent instances
@@ -32,6 +33,7 @@ const agentRegistry = new Map<AgentRole, any>([
   ['lol_queue_analyst' as any, new LoLQueueAnalystAgent()],
   ['lol_strategy' as any, new LoLGatherStrategyAgent()],
   ['mechanical_skill_analyst' as any, new MechanicalSkillAnalystAgent()],
+  ['valorant_opponent_analysis' as any, new ValorantOpponentAnalysisAgent()],
 ]);
 
 /**

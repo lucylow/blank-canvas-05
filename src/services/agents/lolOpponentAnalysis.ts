@@ -5,6 +5,7 @@ import {
   LoLOpponentProfile, 
   LoLOpponentArchetype 
 } from '@/types/lolAgents';
+import { CounterattackEngine } from '@/services/CounterattackEngine';
 
 /**
  * LoLOpponentAnalysisAgent
@@ -75,17 +76,27 @@ export class LoLOpponentAnalysisAgent extends BaseAgentImpl {
       ...mistakes.map(m => `Exploit: ${m}`)
     ];
 
+    const exploitablePatterns = this.buildLoLExploitablePatterns();
+
+    // Infer playstyle from archetype/mid-game reads
+    const primaryPlaystyle = this.inferLoLPlaystyle(profile);
+    const engine = new CounterattackEngine();
+    const liveCounter = engine.generateCounter({ game: 'LEAGUE', primary: primaryPlaystyle });
+
     return {
       ...this.createBaseOutput(insights, recommendations, 0.85),
       opponent_profile: {
         ...profile,
-        summonerSpells: summoners
+        summonerSpells: summoners,
+        primary_playstyle: primaryPlaystyle,
       },
       game_plan: gamePlan,
       lane_behavior_read: laneBehavior,
       map_tendencies: mapTendencies,
       mid_game_read: midGameReads,
-      mistakes_to_exploit: mistakes
+      mistakes_to_exploit: mistakes,
+      exploitable_patterns: exploitablePatterns,
+      live_counterattack: liveCounter,
     };
   }
 
@@ -184,6 +195,23 @@ export class LoLOpponentAnalysisAgent extends BaseAgentImpl {
     return mistakes;
   }
 
+  private inferLoLPlaystyle(profile: LoLOpponentProfile): string {
+    switch (profile.archetype) {
+      case 'Lane Bully':
+        return 'early_snowball';
+      case 'Scaling Carry':
+        return 'scaler';
+      case 'Roamer':
+        return 'pick_comp';
+      case 'All-In Assassin':
+        return 'pick_comp';
+      case 'Utility / Tank':
+        return 'teamfight';
+      default:
+        return 'teamfight';
+    }
+  }
+
   private generateOneLineGamePlan(profile: LoLOpponentProfile, behavior: string, midGame: string): string {
     // Step 10
     if (profile.archetype === 'Lane Bully') {
@@ -193,6 +221,122 @@ export class LoLOpponentAnalysisAgent extends BaseAgentImpl {
       return "I shove and roam first to impact other lanes before they scale.";
     }
     return "I play safe, respect the key ability cooldown, and scale for teamfights.";
+  }
+
+  private buildLoLExploitablePatterns() {
+    const patterns: import('@/types/opponentPatterns').ExploitablePattern[] = [
+      {
+        id: 'lol-lane-over-trading',
+        category: 'Laning Patterns',
+        pattern: 'Over-Trading for CS',
+        what_you_see: ['Enemy steps up for every minion'],
+        exploit: ['Hold abilities', 'Punish last-hit timing', 'Call jungler'],
+        severity: 'high',
+      },
+      {
+        id: 'lol-wave-predictable-clear',
+        category: 'Laning Patterns',
+        pattern: 'Predictable Wave Clear',
+        what_you_see: ['Uses same ability on wave every time'],
+        exploit: ['Trade during cooldown', 'Freeze wave', 'Force bad backs'],
+        severity: 'medium',
+      },
+      {
+        id: 'lol-jungle-same-clear',
+        category: 'Jungle Pathing',
+        pattern: 'Same Clear Every Game',
+        what_you_see: ['Always starts bot side', 'Ganks same lane early'],
+        exploit: ['Ward early', 'Track camps', 'Counter-gank or invade opposite side'],
+        severity: 'high',
+      },
+      {
+        id: 'lol-jungle-no-adapt',
+        category: 'Jungle Pathing',
+        pattern: 'No Adaptation After Fail',
+        exploit: ['Punish repeat ganks', 'Deep vision', 'Steal camps'],
+        severity: 'medium',
+      },
+      {
+        id: 'lol-vision-same-wards',
+        category: 'Vision Habits',
+        pattern: 'Wards in Same Spots',
+        exploit: ['Sweep predictable bushes', 'Fake vision control', 'Ambush'],
+        severity: 'medium',
+      },
+      {
+        id: 'lol-vision-facecheck',
+        category: 'Vision Habits',
+        pattern: 'Face-Checking',
+        exploit: ['Bait objectives', 'Hide in fog', 'Don\'t show on map'],
+        severity: 'high',
+      },
+      {
+        id: 'lol-objective-fight-every-drake',
+        category: 'Objective Decisions',
+        pattern: 'Fight Every Dragon',
+        exploit: ['Set vision traps', 'Trade Herald/towers', 'Force bad fights'],
+        severity: 'high',
+      },
+      {
+        id: 'lol-objective-no-baron-discipline',
+        category: 'Objective Decisions',
+        pattern: 'No Baron Discipline',
+        what_you_see: ['Starting Baron without vision', 'Chasing instead of finishing'],
+        exploit: ['Punish with collapse', 'Steal or wipe'],
+        severity: 'critical',
+      },
+      {
+        id: 'lol-items-greedy-damage',
+        category: 'Itemization Mistakes',
+        pattern: 'Greedy Damage Builds',
+        exploit: ['Focus that player', 'Force burst', 'Build resist early'],
+        severity: 'medium',
+      },
+      {
+        id: 'lol-items-no-antiheal',
+        category: 'Itemization Mistakes',
+        pattern: 'No Anti-Heal / No MR',
+        exploit: ['Lean into healing/damage', 'Force long fights'],
+        severity: 'high',
+      },
+      {
+        id: 'lol-teamfight-same-engage',
+        category: 'Teamfight Positioning',
+        pattern: 'Same Engage Angle',
+        exploit: ['Hold peel', 'Kite backwards', 'Punish cooldowns'],
+        severity: 'medium',
+      },
+      {
+        id: 'lol-teamfight-carry-overextends',
+        category: 'Teamfight Positioning',
+        pattern: 'Carry Overextends',
+        exploit: ['Flank', 'Fog of war engage', 'Force Flash early'],
+        severity: 'high',
+      },
+      {
+        id: 'lol-macro-aram-mid',
+        category: 'Macro Patterns',
+        pattern: 'ARAM Mid After 15',
+        exploit: ['Side lane pressure', 'Vision control', 'Force map movement'],
+        severity: 'medium',
+      },
+      {
+        id: 'lol-macro-poor-reset',
+        category: 'Macro Patterns',
+        pattern: 'Poor Reset Timing',
+        exploit: ['Start objectives after enemy resets', 'Punish item delays'],
+        severity: 'high',
+      },
+      {
+        id: 'lol-macro-no-boots-rush',
+        category: 'Macro Patterns',
+        pattern: 'Delayed Boots Timing',
+        what_you_see: ['No boots at 5:30 while you have them', 'Enemy stuck in lane without mobility'],
+        exploit: ['Force rotations', 'Invade jungle', 'Abuse MS advantage for skillshots'],
+        severity: 'medium',
+      },
+    ];
+    return patterns;
   }
 
   getTools(): AgentTool[] {

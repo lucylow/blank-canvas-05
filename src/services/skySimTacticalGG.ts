@@ -35,6 +35,15 @@ class SkySimTacticalGGService {
   async analyzeMatch(gridPackets: GridDataPacket[]): Promise<SkySimTacticalGGAnalysis> {
     const ingestionResult = gridIngestion.processGridData(gridPackets);
 
+    // Persist to Supabase if available
+    if (gridPackets.length > 0 && gridPackets[0].match_context?.match_id) {
+      import('./api').then(({ api }) => {
+        api.ingestTelemetry(gridPackets[0].match_context.match_id, gridPackets).catch(err => {
+          console.error('Failed to persist telemetry during analysis:', err);
+        });
+      });
+    }
+
     const microAnalysis = heuristicEngine.analyzeMicro(
       ingestionResult.enriched,
       gridPackets

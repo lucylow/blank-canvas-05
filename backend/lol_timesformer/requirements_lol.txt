@@ -1,0 +1,12 @@
+torch
+torchvision
+torchaudio
+opencv-python
+pymem
+mss
+pygame
+pygame_gui
+numpy
+pygetwindow
+psutil
+git+https://github.com/facebookresearch/TimeSformer.git

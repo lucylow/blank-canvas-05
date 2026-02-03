@@ -53,6 +53,40 @@ export interface UtilityMetric {
   lckPro?: string | number;
 }
 
+export interface UtilityMistake {
+  id: number;
+  title: string;
+  frequency: string;
+  wrong: string;
+  right: string;
+  impact: string;
+  fix?: string;
+  rule?: string;
+  pattern?: string;
+  priority?: string;
+  category: 'CRITICAL' | 'MID-ROUND' | 'POSITIONAL' | 'ECONOMY';
+}
+
+export interface RoleTrap {
+  role: string;
+  trap: string;
+}
+
+export interface UtilityMistakesData {
+  topMistakes: UtilityMistake[];
+  roleTraps: RoleTrap[];
+  checklist: string[];
+  drills: {
+    time: string;
+    task: string;
+  }[];
+  stats: {
+    platWR: string;
+    immortalWR: string;
+    gapCauses: { label: string; value: string }[];
+  };
+}
+
 export interface RoleBenchmark {
   role: string;
   metrics: {
@@ -75,6 +109,7 @@ export interface UtilityDashboardData {
     coreKpis: UtilityMetric[];
     roleBenchmarks: RoleBenchmark[];
     mapDashboards: MapUtility[];
+    mistakes?: UtilityMistakesData;
   };
   lol: {
     summonerSpellEfficiency: UtilityMetric[];
@@ -84,6 +119,12 @@ export interface UtilityDashboardData {
       lckPro: string;
     }[];
     roleBenchmarks: RoleBenchmark[];
+    timingComparison?: {
+      utility: string;
+      soloQueue: string;
+      teamPlay: string;
+      reason: string;
+    }[];
   };
   economy: {
     valorant: {
@@ -107,4 +148,20 @@ export interface UtilityDashboardData {
     target: string;
     weeklyGains: string[];
   }[];
+}
+
+export interface Lineup {
+  name: string;
+  type: string;
+  usage: string;
+  coords: string;
+  description: string;
+  agents: string[];
+}
+
+export interface MapLineups {
+  mapName: string;
+  tagline: string;
+  attack: Lineup[];
+  defense: Lineup[];
 }

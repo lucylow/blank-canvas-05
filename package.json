@@ -19,7 +19,8 @@
     "start": "npm-run-all -p server dev",
     "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,md}'",
     "format:check": "prettier --check 'src/**/*.{ts,tsx,js,jsx,json,md}'",
-    "prepare": "husky install || true"
+    "prepare": "husky install || true",
+    "overlay": "cd valorant-overlay && npm start"
   },
   "dependencies": {
     "@faker-js/faker": "^10.2.0",

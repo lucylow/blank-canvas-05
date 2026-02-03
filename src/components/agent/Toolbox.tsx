@@ -8,7 +8,7 @@ export const Toolbox: React.FC = () => {
   const { isRunning } = useAgent();
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-tour="agent-toolbox">
       <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
         <Wrench className="w-4 h-4 text-primary" />
         Available Tools

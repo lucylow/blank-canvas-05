@@ -19,7 +19,7 @@ export const MemoryPanel: React.FC = () => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-tour="agent-memory">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
           <Brain className="w-4 h-4 text-primary" />

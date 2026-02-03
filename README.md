@@ -30,6 +30,7 @@
     *   [6.3. Real-Time Latency in Hybrid Architecture](#63-real-time-latency-in-hybrid-architecture)
     *   [6.4. Cross-Game Normalization](#64-cross-game-normalization)
 7.  [Installation & Setup](#7-installation--setup)
+    *   [7.4. LoL TimeSformer Minimap Integration](#74-lol-timesformer-minimap-integration)
     *   [7.1. Prerequisites](#71-prerequisites)
     *   [7.2. Backend Setup](#72-backend-setup)
     *   [7.3. Frontend Setup](#73-frontend-setup)
@@ -42,6 +43,11 @@
 11. [License](#11-license)
 12. [Acknowledgments](#12-acknowledgments)
 13. [References](#13-references)
+14. [Player Weaknesses](#14-player-weaknesses)
+    *   [14.1. VALORANT](#141-valorant)
+    *   [14.2. League of Legends](#142-league-of-legends)
+    *   [14.3. Utility Timing (Solo vs Team)](#143-utility-timing-solo-vs-team)
+15. [Market Comparison](#15-market-comparison)
 
 ---
 
@@ -59,6 +65,7 @@ SkySim Tactical GG functions as a sophisticated, AI-driven tactical engine, meti
 
 *   **3D Tactical Motion Synthesis:** Reconstructs player movements from raw GRID data into a high-fidelity 3D environment, allowing for detailed analysis of mechanical execution.
 *   **Real-Time Strategic Decision Engine (EV Gauge):** Processes live or historical GRID telemetry to compute the Expected Value (EV) of various in-game objectives and strategic decisions, providing probabilistic outcomes and rationales.
+*   **TimeSformer Minimap Integration:** A production-ready real-time analysis tool that uses video transformers (TimeSformer) to predict enemy movements and provide live coaching recommendations based on minimap data and live telemetry.
 *   **Automated Scouting & Drafting Assistant:** Systematically analyzes vast repositories of historical GRID data to produce concise scouting reports and real-time drafting recommendations.
 
 This README provides a comprehensive technical overview of SkySim Tactical GG, detailing its architecture, implementation, and the innovative solutions developed to overcome significant technical challenges.
@@ -405,6 +412,45 @@ Developing SkySim Tactical GG involved overcoming several complex technical hurd
 
 ## 7. Installation & Setup
 
+### 7.4. LoL TimeSformer Minimap Integration
+
+Warning and responsibility note:
+- Interacting with the League of Legends process memory and rendering overlays may violate Riot Games' Terms of Service in some contexts. Use this integration responsibly, for research and personal development on your own risk. Running this may also require Administrator privileges on Windows.
+
+Dependencies (separate from core requirements):
+```
+# Create/activate a dedicated venv
+python -m venv .venv
+. .venv/Scripts/activate
+
+# Install LoL overlay dependencies
+pip install -r backend/lol_timesformer/requirements_lol.txt
+```
+
+GPU (recommended):
+- Install CUDA-enabled PyTorch per https://pytorch.org/get-started/locally/ for your GPU/driver.
+
+Model weights:
+- The code loads the TimeSformer model via Torch Hub. To use a fine-tuned model, place your weights at `timesformer_lol_minimap.pth` or modify the path.
+
+Running the overlay:
+```
+# Run as a module so relative imports work
+python -m backend.lol_timesformer.main
+```
+
+Features delivered:
+- 16-frame minimap capture → TimeSformer prediction → live coach calls (~60ms target)
+- Live memory reading for entities (baseline offsets; may require updates per patch)
+- Enemy jungle location prior with gank/rotate probabilities
+- Objective timing prompts (dragon/baron) and playstyle classification
+
+Troubleshooting:
+- If the overlay window doesn’t appear, ensure a League window is open and focused; the minimap auto-detect uses the first "League of Legends" window title.
+- If memory attach fails, run your shell as Administrator and verify the process name.
+- If Torch Hub model fetch fails, install TimeSformer via git as listed or pin a commit.
+- If you run on CPU, expect higher latency; consider reducing capture FPS or sequence length.
+
 To set up and run SkySim Tactical GG locally, follow these instructions.
 
 ### 7.1. Prerequisites
@@ -550,3 +596,191 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [9] Guyon, Isabelle, et al. "Gene selection for cancer classification using support vector machines." *Machine Learning*, 2002.
 [10] Lundberg, Scott M., and Su-In Lee. "A Unified Approach to Interpreting Model Predictions." *Advances in Neural Information Processing Systems*, 2017.
 [11] Fastify. *Fast and low overhead web framework, for Node.js*. Available at: [https://www.fastify.io/](https://www.fastify.io/)
+
+---
+
+## 15. Market Comparison
+
+For a detailed analysis of how SkySim Tactical GG fits into the current esports tool ecosystem, see our comparison of leading dashboard solutions:
+
+*   [Tracker.gg vs Lolalytics Dashboard Comparison (2026)](docs/TRACKER_VS_LOLALYTICS.md)
+
+
+---
+
+## 14. Player Weaknesses
+
+A player-centric breakdown of common weaknesses in VALORANT and League of Legends. Use this as an in-game checklist to spot habits you can punish immediately.
+
+### 14.1. VALORANT
+
+Valorant weaknesses usually fall into mechanical, tactical, economic, or mental categories.
+
+#### A. Mechanical Weaknesses (Aim & Movement)
+
+- ❌ Poor First-Bullet Accuracy
+  - Signs: Misses opening shots; relies on spray
+  - Exploit: Hold longer angles; force long-range fights; jiggle peek to bait shots
+- ❌ Bad Crosshair Placement
+  - Signs: Crosshair not at head height; looks at ground while moving
+  - Exploit: Pre-aim corners; take dry peeks; win first contact consistently
+- ❌ Static Movement
+  - Signs: Stops completely before shooting; predictable strafe rhythm
+  - Exploit: Counter-strafe timing; wide swing; double peek
+
+#### B. Positioning Weaknesses
+
+- ❌ Overexposed Holding
+  - Signs: Holds wide angles alone; no trade support
+  - Exploit: Flash + swing; trade instantly; force reposition
+- ❌ Predictable Anchoring
+  - Signs: Same site every round
+  - Exploit: Farm that site; use utility early; force rotations
+
+#### C. Utility Weaknesses
+
+- ❌ Wasted Utility
+  - Signs: Smokes misplaced; flashes team; utility too early
+  - Exploit: Wait it out; re-hit after cooldown; punish blind teammates
+- ❌ One-Dimensional Utility
+  - Signs: Same lineups; same darts/smokes
+  - Exploit: Pre-aim lineups; destroy utility early; change tempo
+
+#### D. Economy Weaknesses
+
+- ❌ Force Buy Addiction
+  - Signs: Buys every loss; no full saves
+  - Exploit: Play range; don’t donate guns; snowball economy
+- ❌ Poor Weapon Choice
+  - Signs: Short-range gun at long range
+  - Exploit: Hold distance; don’t rush fights
+
+#### E. Decision-Making Weaknesses
+
+- ❌ Over-Peeking
+  - Signs: Peeks after getting kill; repeeks Operator
+  - Exploit: Hold angles; punish repeat peeks
+- ❌ No Adaptation
+  - Signs: Same play every round
+  - Exploit: Read patterns; stack counters; win without risk
+
+#### F. Mental Weaknesses
+
+- ❌ Tilt After Death
+  - Signs: Solo pushes; faster decisions
+  - Exploit: Slow game; play trades; let them throw
+- ❌ Ego Duels
+  - Signs: Forces aim battles
+  - Exploit: Utility + numbers; never 1v1 unnecessarily
+
+##### VALORANT GOLD RULE
+
+Punish impatience. Win with discipline.
+
+### 14.2. League of Legends
+
+LoL weaknesses show up in laning, macro, vision, and teamfighting.
+
+#### A. Laning Weaknesses
+
+- ❌ CS Tunnel Vision
+  - Signs: Walks up for every minion
+  - Exploit: Trade on last-hit timing; freeze wave; jungle pressure
+- ❌ Poor Wave Management
+  - Signs: Perma-pushes; breaks freezes
+  - Exploit: Freeze near tower; deny XP; force bad recalls
+- ❌ Cooldown Misuse
+  - Signs: Uses key ability on wave
+  - Exploit: Trade immediately; all-in on cooldown window
+
+#### B. Jungle & Map Awareness Weaknesses
+
+- ❌ No Jungle Tracking
+  - Signs: Pushes without vision
+  - Exploit: Repeat ganks; dive setups
+- ❌ Predictable Pathing
+  - Signs: Same route every game
+  - Exploit: Counter-gank; invade opposite side
+
+#### C. Vision Weaknesses
+
+- ❌ Lazy Warding
+  - Signs: Wards same bush; no control wards
+  - Exploit: Sweep; set ambushes; fog-of-war kills
+- ❌ Face-Checking
+  - Exploit: Bait objectives; hide in fog; force fights on your terms
+
+#### D. Objective Weaknesses
+
+- ❌ Fighting Every Objective
+  - Signs: Forces dragon fights behind
+  - Exploit: Trade objectives; set traps; win map, not fight
+- ❌ Poor Baron Discipline
+  - Signs: Chases kills; no vision setup
+  - Exploit: Collapse; steal or ace
+
+#### E. Itemization Weaknesses
+
+- ❌ Greedy Damage Builds
+  - Signs: No armor/MR; delayed defensive items
+  - Exploit: Focus target; burst; force teamfights
+- ❌ No Anti-Heal / No Tenacity
+  - Exploit: Play sustain; chain CC
+
+#### F. Teamfight Weaknesses
+
+- ❌ Bad Positioning
+  - Signs: Carry front-lining
+  - Exploit: Flank; burn flashes; force resets
+- ❌ Poor Target Priority
+  - Signs: Hitting tanks only
+  - Exploit: Peel carries; outlast fights
+
+#### G. Mental & Macro Weaknesses
+
+- ❌ ARAM Syndrome
+  - Signs: Groups mid endlessly
+  - Exploit: Side-lane pressure; vision control; force rotations
+- ❌ Bad Reset Timing
+  - Exploit: Start objectives after recalls; punish item spikes
+
+##### LEAGUE GOLD RULE
+
+Vision + wave control beats mechanics.
+
+### 14.3. Utility Timing (Solo vs Team)
+
+Utility timing differs by ~40% between Solo Queue and Organized Team Play. 
+
+| Utility | Solo Queue | Team Play | Reason |
+| :--- | :--- | :--- | :--- |
+| **Flash** | Defensive (70%) | Offensive (65%) | Solo: Survive → Carry / Team: Engage → Win |
+| **Teleport** | Split push (82%) | Objective siege (91%) | Solo: T1 pressure / Team: 5v4 fights |
+
+For a full breakdown of mindset shifts, role-specific splits, and quantified WR impact, see our specialized guides:
+*   [U.GG League of Legends Improvement Guide](docs/UGG_IMPROVEMENT_GUIDE.md)
+*   [Utility Timing Comparison: Solo Queue vs Team Play](docs/UTILITY_TIMING_COMPARISON.md)
+
+### Quick In-Game Weakness Scan
+
+Ask yourself:
+- ☐ Who overextends?
+- ☐ Who never adapts?
+- ☐ Who panics under pressure?
+- ☐ Who builds greedily?
+
+That’s your win condition.
+
+### Final Takeaway
+
+You don’t need to be better mechanically. You need to identify the weakest link and apply pressure repeatedly.
+
+“Games are won by punishing habits, not out-aiming everyone.”
+
+---
+
+## 15. Market Comparison
+
+For a detailed analysis of how SkySim Tactical GG fits into the current esports tool ecosystem, see our comparison of leading dashboard solutions:
+
+*   [Tracker.gg vs Lolalytics Dashboard Comparison (2026)](docs/TRACKER_VS_LOLALYTICS.md)

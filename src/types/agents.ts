@@ -28,7 +28,8 @@ export type AgentRole =
   | 'lol_opponent_analysis'
   | 'lol_queue_analyst'
   | 'worst_case_simulator'
-  | 'mechanical_skill_analyst';
+  | 'mechanical_skill_analyst'
+  | 'valorant_opponent_analysis';
 
 /**
  * Mechanical Skill Tiers and Profiles

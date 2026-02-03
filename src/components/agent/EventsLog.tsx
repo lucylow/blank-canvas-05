@@ -20,7 +20,7 @@ export const EventsLog: React.FC = () => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-tour="events-log">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
           <Activity className="w-4 h-4 text-primary" />

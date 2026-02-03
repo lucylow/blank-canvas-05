@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
-    const { action, matchId, matchData, computeSummary = false } = await req.json()
+    const { action, matchId, matchData, packets, computeSummary = false } = await req.json()
 
     // Audit log helper (centralized logic mirrored for Edge Function compatibility)
     const auditLog = async (
@@ -55,6 +55,53 @@ Deno.serve(async (req) => {
       } catch (err) {
         console.error(`[AUDIT ERROR] for ${resourceId}:`, err)
       }
+    }
+
+    if (action === 'ingest_telemetry') {
+      if (!matchId || !packets || !Array.isArray(packets)) {
+        throw new Error('matchId and packets array are required for ingest_telemetry')
+      }
+
+      // 1. Get or create match reference
+      let { data: match, error: matchError } = await supabase
+        .from('grid_matches')
+        .select('id')
+        .eq('provider_match_id', matchId)
+        .single()
+      
+      if (matchError && matchError.code !== 'PGRST116') throw matchError
+
+      if (!match) {
+        const { data: newMatch, error: createError } = await supabase
+          .from('grid_matches')
+          .insert({ provider: 'grid', provider_match_id: matchId, map_name: 'pending' })
+          .select('id')
+          .single()
+        if (createError) throw createError
+        match = newMatch
+      }
+
+      // 2. Insert events/packets
+      const eventsToInsert = packets.map(p => ({
+        match_id: match.id,
+        provider: 'grid',
+        event_type: p.type || 'telemetry',
+        timestamp: p.timestamp || Date.now(),
+        payload: p
+      }))
+
+      const { error: insertError } = await supabase
+        .from('grid_events')
+        .insert(eventsToInsert)
+
+      if (insertError) {
+        await auditLog('grid', matchId, 'ingest_telemetry', 'failed', insertError.message)
+        throw insertError
+      }
+
+      return new Response(JSON.stringify({ success: true, count: packets.length }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     if (action === 'ingest_match') {

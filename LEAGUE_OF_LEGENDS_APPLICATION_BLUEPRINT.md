@@ -263,6 +263,7 @@ Break signals into player, position, ability, vision, economy, and team categori
 
 - **Extra distance**: Compare actual path length vs shortest path for intended objective (jungle pathing, rotation efficiency)
 - **Back timing**: Detect suboptimal back timing (backing before wave crash, backing during objective windows)
+- **Boots timing**: Detect 5-7 minute boots rush performance (optimal: Tier 1 by 5:00, Tier 2 by 7:15)
 
 #### Lane Positioning
 
@@ -375,6 +376,7 @@ Your platform's feature engineering layer (`features.py`) already handles aggreg
 - `reaction_latency_series`: Sequence of reaction times per fight/scenario (feed to LSTM/Transformer for pattern detection)
 - `ability_cooldown_utilization_series`: Time series of cooldown utilization by game phase
 - `cs_trend`: Slope of CS/min over time (detect improving/declining performance)
+- `boots_timing_offset`: Difference between actual boots purchase time and 5-7 minute optimal window
 - `gold_curve`: Gold over time, compared to role baseline (detect item timing issues)
 
 ### Context-Aware Features
@@ -403,6 +405,7 @@ Your platform uses a multi-model approach (rule engines, gradient boosting, sequ
 
 - **Use cases**: Simple heuristics that don't require ML
   - Late TP detection: `tp_delay > 10s` → flag as mistake
+  - Suboptimal Boots Rush: `boots_t1_time > 5:30` and `lane_state == 'shoved'` → flag
   - Missing CS under pressure: `missed_cs_rate_when_enemy_nearby > 0.3` → flag
   - Low ward coverage: `wards_per_min < role_baseline - 0.5` → flag
 - **Implementation**: Adapt your existing rule-based mistake detection to LoL signals

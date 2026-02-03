@@ -13,6 +13,8 @@ export interface LoLPowerWindow {
   danger_level: number; // 0-1
 }
 
+import { CounterattackScript } from './counterattack';
+
 export interface LoLOpponentProfile {
   championName: string;
   archetype: LoLOpponentArchetype;
@@ -37,6 +39,7 @@ export interface LoLOpponentProfile {
     last_used?: number;
   };
   itemSpikes: string[];
+  primary_playstyle?: string;
 }
 
 export interface LoLOpponentAnalysisOutput extends AgentOutput {
@@ -46,4 +49,6 @@ export interface LoLOpponentAnalysisOutput extends AgentOutput {
   map_tendencies: string;
   mid_game_read: string;
   mistakes_to_exploit: string[];
+  exploitable_patterns?: import('./opponentPatterns').ExploitablePattern[];
+  live_counterattack?: CounterattackScript;
 }

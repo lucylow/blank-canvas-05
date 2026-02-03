@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS grid_matches (
     UNIQUE(provider, provider_match_id)
 );
 
+CREATE INDEX IF NOT EXISTS idx_grid_matches_provider_id ON grid_matches(provider, provider_match_id);
+
 CREATE TABLE IF NOT EXISTS grid_players (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     provider text NOT NULL,
@@ -40,6 +42,9 @@ CREATE TABLE IF NOT EXISTS grid_events (
     payload jsonb,
     inserted_at timestamptz DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_grid_events_match_id ON grid_events(match_id);
+CREATE INDEX IF NOT EXISTS idx_grid_events_timestamp ON grid_events(timestamp);
 
 CREATE TABLE IF NOT EXISTS grid_micro_signals (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
