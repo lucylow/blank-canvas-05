@@ -49,7 +49,7 @@ import {
   SampleHealthCheck,
   SampleAPIInfo,
   SampleMacroReview,
-} from '@/Samples/backendSamples';
+} from '@/fixtures/backendSamples';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

@@ -30,6 +30,42 @@ export const SampleValorantPlayers: ValorantPlayer[] = [
       kd_ratio: 1.15, adr: 142.8, hs_percentage: 24, first_bloods: 22, clutches_won: 8, kast: 82, win_rate: 58,
       agent_pool: [{ agent: 'Sova', games: 25, win_rate: 60, kd: 1.1 }, { agent: 'Skye', games: 10, win_rate: 50, kd: 1.0 }]
     }
+  },
+  { 
+    id: 'vp3', 
+    name: 'CHRONO', 
+    team_id: 'vt1', 
+    role: 'controller',
+    game: 'valorant',
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=CHRONO&backgroundColor=${avatarColors[2].slice(1)}`,
+    stats: { 
+      kd_ratio: 1.05, adr: 128.5, hs_percentage: 22, first_bloods: 10, clutches_won: 15, kast: 85, win_rate: 62,
+      agent_pool: [{ agent: 'Omen', games: 30, win_rate: 65, kd: 1.1 }, { agent: 'Viper', games: 12, win_rate: 55, kd: 0.9 }]
+    }
+  },
+  { 
+    id: 'vp4', 
+    name: 'STEALTH', 
+    team_id: 'vt1', 
+    role: 'sentinel',
+    game: 'valorant',
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=STEALTH&backgroundColor=${avatarColors[3].slice(1)}`,
+    stats: { 
+      kd_ratio: 0.98, adr: 115.2, hs_percentage: 26, first_bloods: 5, clutches_won: 20, kast: 80, win_rate: 60,
+      agent_pool: [{ agent: 'Killjoy', games: 40, win_rate: 62, kd: 1.0 }, { agent: 'Cypher', games: 8, win_rate: 50, kd: 0.8 }]
+    }
+  },
+  { 
+    id: 'vp5', 
+    name: 'VORTEX', 
+    team_id: 'vt1', 
+    role: 'igl',
+    game: 'valorant',
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=VORTEX&backgroundColor=${avatarColors[4].slice(1)}`,
+    stats: { 
+      kd_ratio: 1.10, adr: 135.0, hs_percentage: 25, first_bloods: 15, clutches_won: 10, kast: 88, win_rate: 64,
+      agent_pool: [{ agent: 'Breach', games: 20, win_rate: 68, kd: 1.2 }, { agent: 'KAY/O', games: 15, win_rate: 60, kd: 1.0 }]
+    }
   }
 ];
 
@@ -71,12 +107,67 @@ export const SampleLoLPlayers: LoLPlayer[] = [
         { champion: 'Lucian', games: 25, win_rate: 64, kda: 4.8 }
       ]
     }
+  },
+  {
+    id: 'lp3',
+    name: 'Zeus',
+    team_id: 'lt1',
+    role: 'TOP',
+    game: 'lol',
+    region: 'KR',
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=Zeus&backgroundColor=${avatarColors[2].slice(1)}`,
+    stats: {
+      kills: 3.8, deaths: 2.5, assists: 4.2, kda: 3.2,
+      cs_at_10: 88, cs_at_15: 142, gold_at_10: 3500, gold_at_15: 5800,
+      vision_score: 20, win_rate: 68,
+      champion_pool: [
+        { champion: 'Aatrox', games: 40, win_rate: 72, kda: 4.5 },
+        { champion: 'Jayce', games: 35, win_rate: 65, kda: 3.8 }
+      ]
+    }
+  },
+  {
+    id: 'lp4',
+    name: 'Oner',
+    team_id: 'lt1',
+    role: 'JUNGLE',
+    game: 'lol',
+    region: 'KR',
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=Oner&backgroundColor=${avatarColors[3].slice(1)}`,
+    stats: {
+      kills: 3.2, deaths: 2.8, assists: 7.5, kda: 3.82,
+      cs_at_10: 65, cs_at_15: 110, gold_at_10: 3200, gold_at_15: 5400,
+      vision_score: 35, win_rate: 65,
+      champion_pool: [
+        { champion: 'Lee Sin', games: 50, win_rate: 70, kda: 4.2 },
+        { champion: 'Jarvan IV', games: 30, win_rate: 60, kda: 3.5 }
+      ]
+    }
+  },
+  {
+    id: 'lp5',
+    name: 'Keria',
+    team_id: 'lt1',
+    role: 'SUPPORT',
+    game: 'lol',
+    region: 'KR',
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=Keria&backgroundColor=${avatarColors[4].slice(1)}`,
+    stats: {
+      kills: 1.2, deaths: 3.1, assists: 11.5, kda: 4.1,
+      cs_at_10: 15, cs_at_15: 25, gold_at_10: 2200, gold_at_15: 3800,
+      vision_score: 65, win_rate: 74,
+      champion_pool: [
+        { champion: 'Thresh', games: 45, win_rate: 78, kda: 5.5 },
+        { champion: 'Bard', games: 25, win_rate: 72, kda: 4.2 }
+      ]
+    }
   }
 ];
 
 export const SampleLoLTeams: EsportsTeam[] = [
   { id: 'lt1', name: 'T1', logo: '🔴', game: 'lol', players: SampleLoLPlayers },
-  { id: 'lt2', name: 'Gen.G', logo: '🟡', game: 'lol', players: [] }
+  { id: 'lt2', name: 'Gen.G', logo: '🟡', game: 'lol', players: [] },
+  { id: 'lt3', name: 'Cloud9', logo: '☁️', game: 'lol', players: [] }
 ];
 
 export const SampleLoLMatches: EsportsMatch[] = [
@@ -89,6 +180,16 @@ export const SampleLoLMatches: EsportsMatch[] = [
     winner: 'T1',
     patch: '14.2',
     created_at: new Date().toISOString()
+  },
+  {
+    id: 'lm2',
+    game: 'lol',
+    team_a: SampleLoLTeams[0]!,
+    team_b: SampleLoLTeams[2]!,
+    score: [1, 0],
+    winner: 'T1',
+    patch: '14.2',
+    created_at: new Date(Date.now() - 86400000).toISOString()
   }
 ];
 
@@ -141,6 +242,28 @@ export const SampleMatches: Match[] = [
     winner: 'Team Alpha',
     rounds: generateRounds(22, 13),
     created_at: new Date().toISOString(),
+  },
+  {
+    id: 'match_002',
+    team_a: SampleTeams[0]!,
+    team_b: SampleTeams[1]!,
+    map: 'Ascent',
+    score: [13, 11],
+    duration: 45,
+    winner: 'Team Alpha',
+    rounds: generateRounds(24, 13),
+    created_at: new Date(Date.now() - 172800000).toISOString(),
+  },
+  {
+    id: 'match_003',
+    team_a: SampleTeams[0]!,
+    team_b: SampleTeams[1]!,
+    map: 'Haven',
+    score: [10, 13],
+    duration: 38,
+    winner: 'Team Beta',
+    rounds: generateRounds(23, 10),
+    created_at: new Date(Date.now() - 259200000).toISOString(),
   }
 ];
 
@@ -151,6 +274,33 @@ export const SampleInsights: Insight[] = [
     title: 'Eco Round Win Rate Low',
     description: 'Team wins only 23% of eco rounds. Consider adjusting eco strategies or forcing more.',
     priority: 'high',
+    created_at: new Date().toISOString(),
+    actionable: true,
+  },
+  {
+    id: 'i2',
+    type: 'improvement',
+    title: 'Mid-Lane Priority during Baron',
+    description: 'MID priority is often lost right before Baron spawns. Focus on clearing waves 30s earlier.',
+    priority: 'medium',
+    created_at: new Date().toISOString(),
+    actionable: true,
+  },
+  {
+    id: 'i3',
+    type: 'success',
+    title: 'Dragon Soul Conversion',
+    description: 'Excellent objective control. 100% win rate after securing Chemtech soul in last 5 games.',
+    priority: 'low',
+    created_at: new Date().toISOString(),
+    actionable: false,
+  },
+  {
+    id: 'i4',
+    type: 'warning',
+    title: 'Post-Plant Utility Management',
+    description: 'Excessive utility usage immediately after plant on A-site Haven. Save smokes for retake delay.',
+    priority: 'medium',
     created_at: new Date().toISOString(),
     actionable: true,
   }

@@ -16,6 +16,34 @@ app.get("/api/lol/match", (req,res)=>{
   res.json(match);
 });
 
+app.get("/api/lol/matches", (req,res)=>{
+  const matches = [
+    { id: "lm1", title: "T1 vs Gen.G - Finals", region: "KR", patch: "14.2", startTime: Date.now() },
+    { id: "lm2", title: "T1 vs Cloud9 - Group Stage", region: "GLOBAL", patch: "14.2", startTime: Date.now() - 86400000 },
+    { id: "lm3", title: "G2 vs Fnatic - Semi-Finals", region: "EU", patch: "14.1", startTime: Date.now() - 172800000 }
+  ];
+  res.json(matches);
+});
+
+app.get("/api/valorant/matches", (req,res)=>{
+  const matches = [
+    { id: "vm1", title: "Sentinels vs LOUD", map: "Bind", startedAt: Date.now() },
+    { id: "vm2", title: "Fnatic vs DRX", map: "Ascent", startedAt: Date.now() - 86400000 },
+    { id: "vm3", title: "Paper Rex vs NRG", map: "Haven", startedAt: Date.now() - 172800000 }
+  ];
+  res.json(matches);
+});
+
+app.get("/api/valorant/match/:id", (req,res)=>{
+  res.json({
+    id: req.params.id,
+    title: "Sample Valorant Match",
+    map: "Bind",
+    rounds: [],
+    players: []
+  });
+});
+
 /* ===== Frames (SSE-like) ===== */
 app.get("/api/lol/frames", (req,res)=>{
   const match = generateLoLMatch();
