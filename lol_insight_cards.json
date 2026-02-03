@@ -1,0 +1,65 @@
+[
+  {
+    "insight_id": "lol_insight_cs_pressure_gap",
+    "title": "CS Efficiency Drops Under Lane Pressure",
+    "player_role": "ADC",
+    "issue": "CS/min falls from 7.2 to 5.1 when lane state = push against; missed 24 CS in first 10 minutes",
+    "impact": "-480g at 10:00 → delayed item spike by ~2 minutes",
+    "recommendation": "Practice under-tower last-hitting and wave bounce timings; aim for +1.5 CS/min under pressure",
+    "confidence": 0.76,
+    "evidence_count": 5,
+    "evidence": [
+      {"match_id": "mock_lol_match_002", "timestamp": "00:07:30"},
+      {"match_id": "mock_lol_match_004", "timestamp": "00:09:10"},
+      {"match_id": "mock_lol_match_007", "timestamp": "00:08:05"},
+      {"match_id": "mock_lol_match_008", "timestamp": "00:06:55"},
+      {"match_id": "mock_lol_match_009", "timestamp": "00:10:00"}
+    ],
+    "actions": [
+      {"type": "play_evidence", "label": "Play Evidence"},
+      {"type": "assign_drill", "label": "Assign Drill: Under-Tower CS (10m)", "drill_name": "Under-Tower CS", "reps": 1, "duration_min": 10}
+    ]
+  },
+  {
+    "insight_id": "lol_insight_tp_slow_response",
+    "title": "TP Response Late vs Team Call",
+    "player_role": "TOP",
+    "issue": "Mean TP reaction = 3.6s (target < 1.5s) on 4 callouts between 8–22 min",
+    "impact": "-14% teamfight win rate around DRAGON setups",
+    "recommendation": "Set voice cue protocol; drill TP response with stopwatch (target < 1.5s)",
+    "confidence": 0.81,
+    "evidence_count": 4,
+    "evidence": [
+      {"match_id": "mock_lol_match_001", "timestamp": "00:12:15"},
+      {"match_id": "mock_lol_match_003", "timestamp": "00:18:40"},
+      {"match_id": "mock_lol_match_006", "timestamp": "00:20:05"},
+      {"match_id": "mock_lol_match_010", "timestamp": "00:16:50"}
+    ],
+    "actions": [
+      {"type": "show_timeline", "label": "Show TP Timelines"},
+      {"type": "assign_drill", "label": "Assign Drill: TP Stopwatch (5x)", "drill_name": "TP Stopwatch", "reps": 5, "duration_min": 5}
+    ]
+  },
+  {
+    "insight_id": "lol_insight_roam_payoff",
+    "title": "Roam Success Rate Below 35%",
+    "player_role": "MID",
+    "issue": "Roam success = 0.28 with 0.21 roams/min between 8–22 min",
+    "impact": "XP/gold deficit mid → lost prio for objectives",
+    "recommendation": "Roam only on pushed wave + jungle cover; set success gate > 45%",
+    "confidence": 0.73,
+    "evidence_count": 6,
+    "evidence": [
+      {"match_id": "mock_lol_match_002", "timestamp": "00:13:05"},
+      {"match_id": "mock_lol_match_003", "timestamp": "00:15:42"},
+      {"match_id": "mock_lol_match_005", "timestamp": "00:17:18"},
+      {"match_id": "mock_lol_match_006", "timestamp": "00:19:20"},
+      {"match_id": "mock_lol_match_008", "timestamp": "00:14:12"},
+      {"match_id": "mock_lol_match_010", "timestamp": "00:21:33"}
+    ],
+    "actions": [
+      {"type": "play_evidence", "label": "Play Roam Clips"},
+      {"type": "create_team_drill", "label": "Create Drill: Push→Roam Sync (10 reps)", "drill_name": "Push→Roam Sync", "reps": 10, "duration_min": 30}
+    ]
+  }
+]
