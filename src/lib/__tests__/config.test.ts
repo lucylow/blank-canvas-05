@@ -3,7 +3,7 @@ import { config, validateConfig } from '../config';
 
 describe('config', () => {
   beforeEach(() => {
-    vi.clearAllSamples();
+    vi.clearAllMocks();
   });
 
   it('should have required config properties', () => {
@@ -20,16 +20,16 @@ describe('config', () => {
   });
 
   it('should validate config without errors', () => {
-    const consoleWarnSpy = vi.spyOn(console, 'warn').SampleImplementation(() => {});
-    const consoleInfoSpy = vi.spyOn(console, 'info').SampleImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     validateConfig();
 
     // Should not throw
     expect(() => validateConfig()).not.toThrow();
 
-    consoleWarnSpy.SampleRestore();
-    consoleInfoSpy.SampleRestore();
+    consoleWarnSpy.mockRestore();
+    consoleInfoSpy.mockRestore();
   });
 });
 
