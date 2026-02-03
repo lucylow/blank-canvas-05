@@ -127,7 +127,8 @@ Deno.serve(async (req) => {
             throw new Error(`GRID API returned ${response.status}: ${await response.text()}`)
           }
         } catch (e) {
-          await auditLog('grid', matchId, 'fetch_match', 'failed', e.message)
+          const errorMessage = e instanceof Error ? e.message : String(e)
+          await auditLog('grid', matchId, 'fetch_match', 'failed', errorMessage)
           throw e
         }
       }
