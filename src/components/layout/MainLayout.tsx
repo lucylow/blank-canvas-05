@@ -99,9 +99,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center justify-between border-b border-border px-4">
-            <Link to="/app" className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-primary font-bold text-white">
+          <div className="flex h-20 items-center justify-between border-b border-border/50 px-6">
+            <Link to="/app" className="flex items-center gap-3 group">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-primary font-black text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                 SS
               </div>
               <AnimatePresence>
@@ -110,9 +110,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -10 }}
+                    className="flex flex-col"
                   >
-                    <p className="font-bold text-foreground">SkySim Tactical GG</p>
-                    <p className="text-xs text-muted-foreground">Pro Edition</p>
+                    <p className="font-extrabold text-foreground tracking-tight leading-none text-lg">SkySim</p>
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest mt-1">Tactical GG</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -133,7 +134,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 p-4">
+          <nav className="flex-1 space-y-1.5 p-4">
             {menuItems.map((item) => {
               const isActive = location.pathname === item.path || 
                 (item.path !== '/app' && location.pathname.startsWith(item.path));
@@ -143,13 +144,16 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
+                    'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 group relative',
                     isActive
-                      ? 'bg-primary/20 text-primary'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                      ? 'bg-primary/15 text-primary shadow-sm'
+                      : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground'
                   )}
                 >
-                  <item.icon className="h-5 w-5 shrink-0" />
+                  <item.icon className={cn(
+                    'h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110',
+                    isActive ? 'text-primary' : 'text-muted-foreground'
+                  )} />
                   <AnimatePresence>
                     {sidebarOpen && (
                       <motion.span
@@ -161,6 +165,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       </motion.span>
                     )}
                   </AnimatePresence>
+                  {isActive && (
+                    <motion.div 
+                      layoutId="active-indicator"
+                      className="absolute left-0 w-1 h-6 bg-primary rounded-r-full"
+                    />
+                  )}
                 </Link>
               );
             })}

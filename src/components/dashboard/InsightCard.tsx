@@ -50,48 +50,48 @@ export const InsightCard: React.FC<InsightCardProps> = ({ insight, onAction }) =
     >
       <Card
         className={cn(
-          'glass-card border-l-4 transition-all hover:shadow-lg',
+          'glass-card border-l-4 transition-all hover:shadow-xl hover:translate-y-[-2px] duration-300',
           config.borderColor
         )}
       >
-        <CardContent className="p-4">
+        <CardContent className="p-5">
           <div className="flex items-start gap-4">
             <div
               className={cn(
-                'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
+                'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl shadow-inner',
                 config.bgColor
               )}
             >
-              <Icon className={cn('h-5 w-5', config.iconColor)} />
+              <Icon className={cn('h-6 w-6', config.iconColor)} />
             </div>
 
             <div className="min-w-0 flex-1">
-              <div className="mb-1 flex items-center gap-2">
-                <h4 className="font-semibold">{insight.title}</h4>
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <h4 className="font-bold text-base truncate">{insight.title}</h4>
                 <span
                   className={cn(
-                    'rounded-full px-2 py-0.5 text-xs font-medium capitalize',
+                    'rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
                     insight.priority === 'high'
-                      ? 'bg-destructive/20 text-destructive'
+                      ? 'bg-destructive/20 text-destructive border border-destructive/20'
                       : insight.priority === 'medium'
-                      ? 'bg-amber-500/20 text-amber-500'
-                      : 'bg-muted text-muted-foreground'
+                      ? 'bg-amber-500/20 text-amber-500 border border-amber-500/20'
+                      : 'bg-muted text-muted-foreground border border-border'
                   )}
                 >
                   {insight.priority}
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground">{insight.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{insight.description}</p>
 
               {insight.actionable && onAction && (
                 <Button
-                  variant="ghost"
+                  variant="link"
                   size="sm"
-                  className="mt-2 -ml-2 text-primary"
+                  className="mt-3 -ml-3 text-primary font-semibold hover:no-underline group"
                   onClick={onAction}
                 >
                   Take Action
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                  <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               )}
             </div>

@@ -23,8 +23,8 @@ export const ValorantOpponentAnalysisView: React.FC<Props> = ({ analysis }) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Valorant Opponent Analysis</h2>
-          <p className="text-muted-foreground">Exploitable Patterns</p>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Valorant Opponent Analysis</h2>
+          <p className="text-sm text-muted-foreground">Exploitable Patterns</p>
         </div>
         <Badge variant="outline" className="text-xs">Player-focused</Badge>
       </div>
@@ -44,7 +44,7 @@ export const ValorantOpponentAnalysisView: React.FC<Props> = ({ analysis }) => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm flex items-center gap-2"><Clock className="w-4 h-4" /> Likely Opener</CardTitle>
@@ -86,8 +86,8 @@ export const ValorantOpponentAnalysisView: React.FC<Props> = ({ analysis }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-[380px]">
-            <div className="space-y-3">
+          <ScrollArea className="max-h-[480px] md:max-h-[560px]">
+            <div className="space-y-3 min-w-0">
               {exploitable_patterns.map(p => (
                 <div key={p.id} className="p-3 rounded-md border">
                   <div className="flex items-center justify-between">

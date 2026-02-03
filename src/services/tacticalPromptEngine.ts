@@ -47,6 +47,16 @@ const MOTION_VOCABULARY: Record<string, MotionVocabulary> = {
     verbs: ['stay_back', 'flick_target', 'reposition', 'maintain_range'],
     modifiers: ['behind the front line', 'pixel-perfect spacing', 'maximum attack range', 'twitchy and alert'],
     style_descriptors: ['vulnerable', 'deadly', 'disciplined'],
+  },
+  top_laner_engage: {
+    verbs: ['teleport', 'dive_in', 'frontline', 'peel', 'cc_lockdown'],
+    modifiers: ['with massive physical presence', 'ignoring damage', 'unshakable resolve', 'disrupting formations'],
+    style_descriptors: ['tanky', 'relentless', 'protective'],
+  },
+  support_peel: {
+    verbs: ['ward', 'protect', 'exhaust', 'shield', 'disengage'],
+    modifiers: ['keeping allies alive', 'monitoring the map', 'sacrificial', 'strategic positioning'],
+    style_descriptors: ['vigilant', 'altruistic', 'aware'],
   }
 };
 
@@ -55,16 +65,23 @@ const MOTION_VOCABULARY: Record<string, MotionVocabulary> = {
  */
 const CHARACTER_MOTION_STYLES: Record<string, string> = {
   // VALORANT
-  Jett: 'light, acrobatic, and fluid',
-  Sova: 'precise, methodical, and calculated',
-  Raze: 'explosive, kinetic, and chaotic',
-  Sage: 'composed, deliberate, and protective',
+  Jett: 'light, acrobatic, and fluid with wind-like movements',
+  Sova: 'precise, methodical, and calculated archer stance',
+  Raze: 'explosive, kinetic, and chaotic with heavy impacts',
+  Sage: 'composed, deliberate, and protective with spiritual grace',
+  Viper: 'sinister, calculating, and predatory through toxic clouds',
+  Omen: 'spectral, ethereal, and unsettlingly smooth teleportation',
+  Reyna: 'predatory, aggressive, and soul-consuming dominance',
+  Cypher: 'observational, paranoid, and technical surveillance',
   // LoL
-  LeeSin: 'martial-arts based, snappy, and high-mobility',
-  Ahri: 'graceful, elusive, and fox-like',
-  Yasuo: 'swift, sword-focused, and relentless',
-  Leona: 'heavy, armored, and immovable',
-  Zed: 'shadowy, swift, and lethal',
+  LeeSin: 'martial-arts based, snappy, and high-mobility strikes',
+  Ahri: 'graceful, elusive, and fox-like magical flourishes',
+  Yasuo: 'swift, sword-focused, and relentless wind-walking',
+  Leona: 'heavy, armored, and immovable solar defense',
+  Zed: 'shadowy, swift, and lethal ninja precision',
+  Jinx: 'manic, unpredictable, and jittery explosive chaos',
+  Thresh: 'ghastly, methodical, and soul-harvesting chains',
+  Malphite: 'unstoppable, seismic, and literal rock-solid impacts',
 };
 
 /**
@@ -231,9 +248,13 @@ export function generateMotionPrompt(
     if (character.role === 'MID') vocabKey = 'mid_laner_kite';
     else if (character.role === 'JG') vocabKey = 'jungler_gank';
     else if (character.role === 'ADC') vocabKey = 'adc_positioning';
+    else if (character.role === 'TOP') vocabKey = 'top_laner_engage';
+    else if (character.role === 'SUP') vocabKey = 'support_peel';
   } else {
     if (character.role === 'entry_fragger' || character.role === 'entry') vocabKey = 'entry_fragger_peek';
     else if (character.role === 'support') vocabKey = 'support_throw';
+    else if (character.role === 'awper') vocabKey = 'entry_fragger_peek'; // Awpers also peek, but slower
+    else if (character.role === 'anchor') vocabKey = 'support_throw'; 
   }
   
   const vocab = vocabKey ? MOTION_VOCABULARY[vocabKey] : null;

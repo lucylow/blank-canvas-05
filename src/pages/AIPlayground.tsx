@@ -65,15 +65,15 @@ const PlaygroundContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 space-y-6">
+    <div className="min-h-screen p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <Sparkles className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-display font-bold">AI Agent Playground</h1>
+            <h1 className="text-xl sm:text-2xl font-display font-bold">AI Agent Playground</h1>
             <p className="text-sm text-muted-foreground">
               Interactive AI with streaming, tools, memory, and timeline
             </p>
@@ -92,9 +92,9 @@ const PlaygroundContent: React.FC = () => {
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-3">
         {/* Left Column - Prompt & Console */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="xl:col-span-2 space-y-6">
           {/* Prompt Editor */}
           <Card className="glass-card">
             <CardContent className="p-4">
@@ -103,9 +103,11 @@ const PlaygroundContent: React.FC = () => {
           </Card>
 
           {/* Console */}
-          <Card className="glass-card min-h-[400px]">
-            <CardContent className="p-4 h-[400px]">
-              <AgentConsole />
+          <Card className="glass-card">
+            <CardContent className="p-4">
+              <div className="min-h-[280px] md:min-h-[360px] lg:min-h-[420px]">
+                <AgentConsole />
+              </div>
             </CardContent>
           </Card>
 
@@ -144,7 +146,9 @@ const PlaygroundContent: React.FC = () => {
           <Card className="glass-card">
             <CardContent className="p-4">
               <div className="mb-3 text-sm font-semibold">1. VALORANT</div>
-              <ValorantOpponentAnalysisView analysis={mockValorantAnalysis} />
+              <div className="min-w-0">
+                <ValorantOpponentAnalysisView analysis={mockValorantAnalysis} />
+              </div>
             </CardContent>
           </Card>
 

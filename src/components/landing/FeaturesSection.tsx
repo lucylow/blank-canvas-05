@@ -7,26 +7,26 @@ const features = [
     icon: Brain,
     title: "Personalized AI Insights",
     description:
-      "Get data-backed feedback on individual player performance. Identify recurring mistakes and improvement areas.",
-    stat: "78% accuracy in predicting round outcomes",
+      "Valorant: player-specific aim/utility consistency, first-pick impact, and role fit. League: laning efficiency, roam value, and objective setup contributions.",
+    stat: "Up to 78% accuracy on Valorant round outcome trends",
     color: "primary" as const,
   },
   {
     icon: BarChart3,
     title: "Automated Macro Review",
     description:
-      "Generate complete match review agendas in seconds. Focus coaching time on strategy, not analysis.",
-    stat: "Saves 2-3 hours per match review",
+      "Valorant: site exec timings, map control protocols, and eco planning. League: wave states, rotation timing, vision lines, and Baron/Dragon tradeoffs.",
+    stat: "Saves 2–3 hours per VOD/match review",
     color: "secondary" as const,
   },
   {
     icon: GitBranch,
     title: "Hypothetical Predictions",
     description:
-      'Simulate "what if" scenarios. Test strategic decisions before making them in real matches.',
-    stat: "Predicts strategic outcomes with 85% confidence",
+      'Valorant: simulate site hits with different agent comps and utility paths. League: test draft swaps and objective calls to project gold/XP swings.',
+    stat: "Up to 85% confidence on scenario forecasts",
     color: "accent" as const,
-  },
+  }
 ];
 
 const colorVariants = {

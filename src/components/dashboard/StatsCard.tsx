@@ -39,35 +39,33 @@ export const StatsCard: React.FC<StatsCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="glass-card overflow-hidden">
+      <Card className="glass-card overflow-hidden hover:shadow-xl hover:translate-y-[-2px] transition-all duration-300 border-muted/50">
         <CardContent className="p-6">
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-muted-foreground">{title}</p>
-              <p className="text-3xl font-bold">{value}</p>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{title}</p>
+              <div className="flex items-baseline gap-2">
+                <p className="text-3xl font-extrabold tracking-tight">{value}</p>
+                {trend && trendValue && (
+                  <div className={cn('flex items-center gap-0.5 text-xs font-bold', trendColor)}>
+                    <TrendIcon className="h-3 w-3" />
+                    {trendValue}
+                  </div>
+                )}
+              </div>
               {subtitle && (
-                <p className="text-sm text-muted-foreground">{subtitle}</p>
+                <p className="text-[10px] text-muted-foreground font-medium">{subtitle}</p>
               )}
             </div>
             <div
               className={cn(
-                'flex h-12 w-12 items-center justify-center rounded-xl',
+                'flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm transition-transform hover:scale-110 duration-300',
                 colorClasses[color]
               )}
             >
               <Icon className="h-6 w-6" />
             </div>
           </div>
-
-          {trend && trendValue && (
-            <div className="mt-4 flex items-center gap-2">
-              <TrendIcon className={cn('h-4 w-4', trendColor)} />
-              <span className={cn('text-sm font-medium', trendColor)}>
-                {trendValue}
-              </span>
-              <span className="text-sm text-muted-foreground">vs last week</span>
-            </div>
-          )}
         </CardContent>
       </Card>
     </motion.div>

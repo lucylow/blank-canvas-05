@@ -105,80 +105,132 @@ export const Dashboard: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="space-y-6"
+      className="container mx-auto max-w-7xl p-4 lg:p-8 space-y-8"
     >
       <EsportsDataDisplay />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Esports AI Coach Dashboard</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-extrabold tracking-tight lg:text-4xl">Dashboard</h1>
+          <p className="text-muted-foreground mt-1 text-lg">
             {dashboardData?.last_update
               ? `Last updated: ${new Date(dashboardData.last_update).toLocaleTimeString()}`
               : 'Real-time multi-game analytics'}
           </p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={loadData}>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="lg" onClick={loadData} className="shadow-sm hover:shadow-md transition-all">
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
-          <Button asChild>
+          <Button size="lg" asChild className="bg-gradient-primary shadow-lg hover:shadow-xl transition-all">
             <Link to="/app/live">
-              <Radio className="mr-2 h-4 w-4" />
+              <Radio className="mr-2 h-4 w-4 animate-pulse" />
               Go Live
             </Link>
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatsCard
-          title="LoL Win Rate"
-          value="72%"
-          icon={Sword}
-          trend="up"
-          trendValue="+3.1%"
-          color="primary"
-        />
-        <StatsCard
-          title="VALORANT Win Rate"
-          value="65%"
-          icon={Trophy}
-          trend="up"
-          trendValue="+5.2%"
-          color="accent"
-        />
-        <StatsCard
-          title="Total Matches"
-          value={47}
-          subtitle="All games"
-          icon={Target}
-          color="secondary"
-        />
-        <StatsCard
-          title="Total Players"
-          value={lolPlayers.length + valorantPlayers.length}
-          subtitle="Across games"
-          icon={Users}
-          color="accent"
-        />
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <EsportsPerformanceChart 
-            lolData={combinedLolPool} 
-            valorantData={combinedValPool} 
+      {/* Primary Metrics Section */}
+      <section>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <StatsCard
+            title="LoL Win Rate"
+            value="72%"
+            icon={Sword}
+            trend="up"
+            trendValue="+3.1%"
+            color="primary"
+          />
+          <StatsCard
+            title="VALORANT Win Rate"
+            value="65%"
+            icon={Trophy}
+            trend="up"
+            trendValue="+5.2%"
+            color="accent"
+          />
+          <StatsCard
+            title="Total Matches"
+            value={47}
+            subtitle="All games combined"
+            icon={Target}
+            color="secondary"
+          />
+          <StatsCard
+            title="Active Players"
+            value={lolPlayers.length + valorantPlayers.length}
+            subtitle="Across all rosters"
+            icon={Users}
+            color="accent"
           />
         </div>
+      </section>
 
-        <div className="space-y-6">
-          <Card className="glass-card">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-lg">Featured Players</CardTitle>
+      <div className="grid gap-8 lg:grid-cols-12">
+        {/* Main Analytics Area */}
+        <div className="lg:col-span-8 space-y-8">
+          <div className="rounded-xl border bg-card/50 shadow-sm overflow-hidden">
+            <EsportsPerformanceChart 
+              lolData={combinedLolPool} 
+              valorantData={combinedValPool} 
+            />
+          </div>
+
+          <Tabs defaultValue="utility" className="w-full">
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
+              <TabsList className="bg-muted/50 p-1">
+                <TabsTrigger value="utility" className="px-4 py-2">Utility Analytics</TabsTrigger>
+                <TabsTrigger value="insights" className="px-4 py-2">AI Insights</TabsTrigger>
+                <TabsTrigger value="tactical" className="px-4 py-2">Tactical</TabsTrigger>
+                <TabsTrigger value="simulator" className="px-4 py-2">Simulator</TabsTrigger>
+                <TabsTrigger value="playbook" className="px-4 py-2">Playbook</TabsTrigger>
+              </TabsList>
+            </div>
+
+            <TabsContent value="utility" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+              <UtilityDashboard />
+            </TabsContent>
+
+            <TabsContent value="insights" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+              <div className="grid gap-4 md:grid-cols-2">
+                {dashboardData?.insights.map((insight) => (
+                  <InsightCard
+                    key={insight.id}
+                    insight={insight}
+                    onAction={insight.actionable ? () => {} : undefined}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="tactical" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+              {tacticalData && (
+                <TacticalOverlay data={tacticalData} isLive={false} />
+              )}
+            </TabsContent>
+
+            <TabsContent value="simulator" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+              <StrategySimulator />
+            </TabsContent>
+
+            <TabsContent value="playbook" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+              <InteractivePlaybook />
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Sidebar Area */}
+        <div className="lg:col-span-4 space-y-8">
+          <Card className="glass-card shadow-sm border-muted/50">
+            <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
+              <div>
+                <CardTitle className="text-xl font-bold">Featured Players</CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">Recently scouted talent</p>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="pt-6 space-y-4">
               {lolPlayers.slice(0, 1).map(p => (
                 <PlayerCard 
                   key={p.id} 
@@ -198,64 +250,14 @@ export const Dashboard: React.FC = () => {
             </CardContent>
           </Card>
           
-          <TacticalScoutingReport 
-            playerData={selectedScoutPlayer} 
-            game={selectedScoutPlayer?.game || 'lol'} 
-          />
+          <div className="sticky top-24">
+            <TacticalScoutingReport 
+              playerData={selectedScoutPlayer} 
+              game={selectedScoutPlayer?.game || 'lol'} 
+            />
+          </div>
         </div>
       </div>
-
-      <Tabs defaultValue="utility" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="utility">Utility Analytics</TabsTrigger>
-          <TabsTrigger value="insights">AI Insights</TabsTrigger>
-          <TabsTrigger value="tactical">Tactical Overlay</TabsTrigger>
-          <TabsTrigger value="simulator">Strategy Simulator</TabsTrigger>
-          <TabsTrigger value="playbook">Playbook</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="utility" className="mt-4">
-          <UtilityDashboard />
-        </TabsContent>
-
-        <TabsContent value="insights" className="mt-4">
-          <Card className="glass-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="gradient-text">AI Insights & Recommendations</span>
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Connecting micro-mistakes to macro outcomes in LoL and VALORANT
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
-                {dashboardData?.insights.map((insight) => (
-                  <InsightCard
-                    key={insight.id}
-                    insight={insight}
-                    onAction={insight.actionable ? () => {} : undefined}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="tactical" className="mt-4">
-          {tacticalData && (
-            <TacticalOverlay data={tacticalData} isLive={false} />
-          )}
-        </TabsContent>
-
-        <TabsContent value="simulator" className="mt-4">
-          <StrategySimulator />
-        </TabsContent>
-
-        <TabsContent value="playbook" className="mt-4">
-          <InteractivePlaybook />
-        </TabsContent>
-      </Tabs>
     </motion.div>
   );
 };

@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 const benefits = [
-  "Real-time player movement analysis with HY-Motion 1.0",
-  "Automatic detection of strategic patterns",
-  'Predictive modeling for "what if" scenarios',
-  "Integration with GRID esports data",
-  "Personalized improvement recommendations",
+  "Valorant: real-time round win probability and site control trends",
+  "League: objective control, vision heatmaps, and rotation suggestions",
+  'Predictive modeling for "what if" scenarios (drafts, comps, eco) ',
+  "Integration with GRID esports data and HY-Motion 1.0",
+  "Personalized improvement recommendations per role",
 ];
 
 export const DemoSection = () => {

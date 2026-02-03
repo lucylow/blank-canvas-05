@@ -36,8 +36,12 @@ export const MotionStudio: React.FC = () => {
   const availableMotions = [
     { id: 'demo', name: 'Round 5 - A Execute', duration: '12s', type: 'Execute', game: 'VALORANT' },
     { id: 'motion2', name: 'Round 8 - Retake B', duration: '8s', type: 'Retake', game: 'VALORANT' },
+    { id: 'motion_v3', name: 'Round 12 - Mid Lurk', duration: '15s', type: 'Lurk', game: 'VALORANT' },
+    { id: 'motion_v4', name: 'Round 3 - Eco Rush', duration: '6s', type: 'Rush', game: 'VALORANT' },
     { id: 'motion3', name: '15:20 - Dragon Fight', duration: '15s', type: 'Teamfight', game: 'LEAGUE_OF_LEGENDS' },
     { id: 'motion4', name: '22:10 - Baron Stealth', duration: '10s', type: 'Objective', game: 'LEAGUE_OF_LEGENDS' },
+    { id: 'motion_l3', name: '08:45 - Bot Gank', duration: '12s', type: 'Gank', game: 'LEAGUE_OF_LEGENDS' },
+    { id: 'motion_l4', name: '30:15 - Elder Siege', duration: '20s', type: 'Siege', game: 'LEAGUE_OF_LEGENDS' },
   ];
 
   const filteredMotions = availableMotions.filter(m => m.game === selectedGame);
@@ -63,16 +67,16 @@ export const MotionStudio: React.FC = () => {
       const gridPacket = getLatestMatchSnapshot(selectedGame);
       setCurrentGridData(gridPacket);
 
-      // Predict action using heuristic rules
+      // Predict action using enhanced heuristic rules in actionPredictor.ts
       const action = predictActionFromGrid(gridPacket);
       setPredictedAction(action);
 
-      // Generate motion keyframes
+      // Generate motion keyframes based on the predicted action
       const keyframes = generateMotionKeyframes(action, 3.0, 30);
       setMotionKeyframes(keyframes);
 
       setIsGenerating(false);
-    }, 500);
+    }, 800);
   };
 
   return (
@@ -124,6 +128,37 @@ export const MotionStudio: React.FC = () => {
             Import GRID Data
           </Button>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        {/* Quick Stats */}
+        <Card className="glass-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Total Predictions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">1,284</div>
+            <p className="text-xs text-green-500 font-medium">+12% from last session</p>
+          </CardContent>
+        </Card>
+        <Card className="glass-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Avg. Confidence</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">84.2%</div>
+            <p className="text-xs text-muted-foreground font-medium">Model: HY-Motion 1.0</p>
+          </CardContent>
+        </Card>
+        <Card className="glass-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">GRID Latency</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">42ms</div>
+            <p className="text-xs text-blue-500 font-medium">Real-time sync active</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Mock data preview to ensure both games are visible even without running prediction */}
@@ -281,6 +316,16 @@ export const MotionStudio: React.FC = () => {
                 </div>
                 {_currentGridData && (
                   <>
+                    <Separator />
+                    <div>
+                      <div className="mb-2 text-sm font-medium text-muted-foreground font-mono">GRID EVENT LOG</div>
+                      <div className="rounded-md bg-black/20 p-3 font-mono text-[10px] space-y-1">
+                        <div className="text-blue-400">[{new Date().toISOString().split('T')[1].split('Z')[0]}] RECEIVED_PACKET - Game: {_currentGridData.game}</div>
+                        <div className="text-green-400">[{new Date().toISOString().split('T')[1].split('Z')[0]}] NORMALIZED_PLAYER_STATE - ID: {_currentGridData.player.id}</div>
+                        <div className="text-yellow-400">[{new Date().toISOString().split('T')[1].split('Z')[0]}] RUNNING_HEURISTICS...</div>
+                        <div className="text-purple-400">[{new Date().toISOString().split('T')[1].split('Z')[0]}] ACTION_PREDICTED: {predictedAction.action}</div>
+                      </div>
+                    </div>
                     <Separator />
                     <div>
                       <div className="mb-2 text-sm font-medium text-muted-foreground">GRID Data Context ({_currentGridData.game})</div>

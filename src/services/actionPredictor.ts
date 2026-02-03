@@ -59,7 +59,7 @@ function predictValorantAction(
 
     // Defender Logic
     if (player.team === 'Defender') {
-      if (timeSincePlant < 3.0) {
+      if (match_context.round_phase === 'retake' || timeSincePlant < 3.0) {
         return {
           action: 'retake_immediately',
           confidence: 0.9,
@@ -76,16 +76,63 @@ function predictValorantAction(
           motion_type: 'throw',
         };
       }
+    } else {
+      // Attacker Logic (Post-plant)
+      return {
+        action: 'post_plant_hold',
+        confidence: 0.85,
+        prompt_snippet: 'crouches in a hidden corner, ears tuned for the defuse sound, ready to swing.',
+        full_prompt: `A ${player.agent} agent, holding post-plant. crouches in a hidden corner, waiting for defuse.`,
+        motion_type: 'hold',
+      };
     }
   }
 
+  // RULE 2.5: Defusing
+  if (match_context.spike_status === 'planted' && player.team === 'Defender' && player.is_moving === false) {
+    // If we're on site and not moving, we might be defusing (simplified)
+    return {
+      action: 'defuse_spike',
+      confidence: 0.7,
+      prompt_snippet: 'kneels down by the spike, hands working frantically on the defuser while glancing around nervously.',
+      full_prompt: `A ${player.agent} agent, defusing. kneels down, hands working on defuser, glancing around.`,
+      motion_type: 'defuse',
+    };
+  }
+
+  // RULE 3: ULTIMATE READY - High impact play potential
+  if (inventory.abilities.x && inventory.abilities.x.charges > 0) {
+    return {
+      action: 'ultimate_execution',
+      confidence: 0.75,
+      prompt_snippet: 'enters a heightened state of focus, channeling their ultimate ability with a dramatic flourish.',
+      full_prompt: `A ${player.agent} agent, activating ultimate. enters a heightened state of focus, channeling their ultimate.`,
+      motion_type: 'ultimate',
+    };
+  }
+
+  // RULE 4: AGGRESSIVE PUSH - Based on movement and health
+  if (player.is_moving && player.health > 80 && inventory.primary_weapon !== 'Knife') {
+    return {
+      action: 'aggressive_entry',
+      confidence: 0.7,
+      prompt_snippet: 'slices the pie around the corner with aggressive intent, crosshair glued to common head-level angles.',
+      full_prompt: `A ${player.agent} agent, pushing aggressively. slices the pie around the corner with aggressive intent.`,
+      motion_type: 'peek',
+    };
+  }
+
   // Default VALORANT action
+  const defaultActionSnippet = player.is_moving 
+    ? 'moves with tactical purpose, clearing angles methodically' 
+    : 'holds a fundamental tactical stance, crosshair placed perfectly';
+  
   return {
     action: 'tactical_positioning',
     confidence: 0.6,
-    prompt_snippet: 'holds a fundamental tactical stance',
-    full_prompt: `A ${player.agent} agent, holding a fundamental tactical stance.`,
-    motion_type: 'hold',
+    prompt_snippet: defaultActionSnippet,
+    full_prompt: `A ${player.agent} agent. ${defaultActionSnippet}.`,
+    motion_type: player.is_moving ? 'rotate' : 'hold',
   };
 }
 
@@ -106,12 +153,59 @@ function predictLoLAction(
     };
   }
 
+  // RULE: Ability casting
+  if (player.mana < 50 && player.is_attacking) {
+    return {
+      action: 'out_of_mana_struggle',
+      confidence: 0.7,
+      prompt_snippet: 'clicks desperately, appearing frustrated as their abilities fail to fire, resorting to basic attacks.',
+      full_prompt: `${player.champion} is out of mana. clicks desperately, resorting to basic attacks.`,
+      motion_type: 'auto_attack',
+    };
+  }
+
   if (player.is_attacking) {
     return {
       action: 'auto_attack_kite',
       confidence: 0.85,
       prompt_snippet: 'performs a rhythmic kiting motion, alternating between precise auto-attacks and strategic micro-movements.',
       full_prompt: `${player.champion} is engaging. performs a rhythmic kiting motion, alternating between attacks and movement.`,
+      motion_type: 'kite',
+    };
+  }
+
+  // RULE: OBJECTIVE FOCUS - Baron/Dragon presence
+  if (match_context.objectives.baron_alive || match_context.objectives.dragon_count > 3) {
+    const isNearObjective = true; // Heuristic, ideally check position
+    if (isNearObjective) {
+      return {
+        action: 'objective_contest',
+        confidence: 0.8,
+        prompt_snippet: 'positions themselves strategically around the pit, looking for an opportunity to steal or secure the objective.',
+        full_prompt: `${player.champion} is near objective. positions themselves strategically around the pit, looking to secure it.`,
+        motion_type: 'hold',
+      };
+    }
+  }
+
+  // RULE: High Level Aggression
+  if (player.level >= 6 && player.is_attacking) {
+    return {
+      action: 'ultimate_engage',
+      confidence: 0.8,
+      prompt_snippet: 'unleashes their signature ultimate ability with an explosive burst of energy and stylized motion.',
+      full_prompt: `${player.champion} uses ultimate! unleashes signature ability with explosive energy.`,
+      motion_type: 'ability',
+    };
+  }
+
+  // RULE: LATE GAME CARRY - High level and gold
+  if (player.level > 15 && inventory.gold > 3000) {
+    return {
+      action: 'carry_positioning',
+      confidence: 0.75,
+      prompt_snippet: 'moves with the confidence of a fed carry, maintaining maximum range while searching for a high-priority target.',
+      full_prompt: `${player.champion} is fed. moves with confidence, maintaining maximum range while searching for targets.`,
       motion_type: 'kite',
     };
   }
@@ -186,6 +280,24 @@ export function generateMotionKeyframes(
             w: Math.cos(halfAngle),
           };
         }
+      } else if (action.motion_type === 'ultimate') {
+        // Simulate ultimate ability activation
+        if (j === 0) { // Root
+          const scale = 1 + Math.sin(t * Math.PI) * 0.2;
+          rotation = { x: 0, y: 0, z: 0, w: 1 }; // Reset for now, focus on root pos for effect
+        }
+        if (j >= 10 && j <= 15) { // Torso/Arms
+          const angle = Math.sin(t * Math.PI * 4) * 0.2;
+          const halfAngle = angle * 0.5;
+          rotation = { x: Math.sin(halfAngle), y: 0, z: 0, w: Math.cos(halfAngle) };
+        }
+      } else if (action.motion_type === 'kite') {
+        // Simulate rhythmic kiting
+        if (j === 0) {
+          const shift = Math.sin(t * Math.PI * 6) * 0.1;
+          const halfAngle = shift * 0.5;
+          rotation = { x: 0, y: Math.sin(halfAngle), z: 0, w: Math.cos(halfAngle) };
+        }
       } else if (action.motion_type === 'disengage') {
         // Simulate retreating motion
         if (j === 0) { // Root
@@ -198,19 +310,46 @@ export function generateMotionKeyframes(
             w: Math.cos(halfAngle),
           };
         }
+      } else if (action.motion_type === 'defuse') {
+        // Simulate defusing motion (kneeling/working)
+        if (j === 0) { // Root
+          rootPosition[1] = -0.5; // Lower to ground
+        }
+        if (j >= 10 && j <= 15) { // Arms
+          const move = Math.sin(t * Math.PI * 10) * 0.1;
+          rotation = { x: 0.5 + move, y: 0, z: 0, w: 1 };
+        }
+      } else if (action.motion_type === 'ability' || action.motion_type === 'auto_attack') {
+        // Simulate ability casting or attacking
+        if (j === 3 || j === 6) { // Arms
+          const angle = Math.sin(t * Math.PI * 8) * 0.5;
+          const halfAngle = angle * 0.5;
+          rotation = { x: Math.sin(halfAngle), y: 0, z: 0, w: Math.cos(halfAngle) };
+        }
+      } else if (action.motion_type === 'retake') {
+        // High speed forward movement
+        rootPosition = [0, 0, t * 4];
+        if (j === 0) {
+          rotation = { x: 0.1, y: 0, z: 0, w: 1 }; // Leaning forward
+        }
       }
 
       joints.push(rotation);
     }
 
     // Root position based on action
-    let rootPosition: [number, number, number] = [0, 0, 0];
     if (action.motion_type === 'disengage') {
       rootPosition = [-t * 2, 0, 0];
     } else if (action.motion_type === 'peek') {
       rootPosition = [Math.sin(t * Math.PI) * 0.5, 0, 0];
-    } else if (action.motion_type === 'throw') {
-      rootPosition = [0, 0, 0];
+    } else if (action.motion_type === 'ultimate') {
+      rootPosition = [0, Math.sin(t * Math.PI) * 0.3, 0]; // Float up slightly
+    } else if (action.motion_type === 'kite') {
+      rootPosition = [Math.cos(t * Math.PI * 4) * 0.4, 0, Math.sin(t * Math.PI * 4) * 0.2];
+    } else if (action.motion_type === 'defuse') {
+      rootPosition = [0, -0.4, 0]; // Stay low
+    } else if (action.motion_type === 'retake') {
+      rootPosition = [0, 0, t * 5];
     }
 
     frames.push({
@@ -240,7 +379,7 @@ export function getLatestMatchSnapshot(game: GameType = 'VALORANT'): GridDataPac
         armor: 25,
         view_angles: { yaw: 145.6, pitch: -3.2 },
         is_crouching: true,
-        is_moving: false,
+        is_moving: true,
       },
       inventory: {
         primary_weapon: 'Vandal',
@@ -249,6 +388,7 @@ export function getLatestMatchSnapshot(game: GameType = 'VALORANT'): GridDataPac
           c: { name: 'Toxic Screen', charges: 1 },
           q: { name: 'Poison Cloud', charges: 0 },
           e: { name: 'Snake Bite', charges: 2 },
+          x: { name: 'Viper\'s Pit', charges: 1 },
         },
         credits: 1200,
       },
@@ -286,8 +426,8 @@ export function getLatestMatchSnapshot(game: GameType = 'VALORANT'): GridDataPac
         map: 'Summoner\'s Rift',
         game_time: 1240,
         objectives: {
-          baron_alive: false,
-          dragon_count: 2,
+          baron_alive: true,
+          dragon_count: 4,
           towers_destroyed: 3,
         },
         team_gold_diff: -1500,

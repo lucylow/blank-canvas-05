@@ -113,8 +113,10 @@ export const HeroSection = () => {
               transition={{ delay: 0.4 }}
               className="text-lg md:text-xl text-muted-foreground mb-6 max-w-xl mx-auto lg:mx-0 leading-relaxed"
             >
-              Transform raw match data into winning strategies with our comprehensive assistant
-              coach platform. Powered by GRID data and HY-Motion 1.0.
+              Built for Valorant and League of Legends. In Valorant, analyze round-by-round site
+              hits, utility trades, and map control to boost round win probability. In League,
+              evaluate drafts, objective control, vision setups, and rotation timing to sharpen
+              macro calls. Powered by GRID data and HY-Motion 1.0.
             </motion.p>
 
             {/* 3-Step CTA Flow */}
