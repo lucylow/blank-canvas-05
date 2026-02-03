@@ -108,7 +108,7 @@ class FormatterAgent extends BaseAgent {
 
       const processingTime = this.getProcessingTime();
 
-      return {
+      return await Promise.resolve({
         success: true,
         result: {
           insights,
@@ -119,7 +119,7 @@ class FormatterAgent extends BaseAgent {
         processing_time_ms: processingTime,
         task_type: 'formatting',
         accuracy: 1.0, // Formatting is deterministic
-      };
+      });
     } catch (error) {
       const processingTime = this.getProcessingTime();
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';

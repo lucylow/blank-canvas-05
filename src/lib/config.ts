@@ -61,10 +61,10 @@ export const config: AppConfig = {
   apiBaseUrl: getApiBaseUrl(),
   wsBaseUrl: getWsBaseUrl(),
   // Default to Sample mode when critical envs are missing (e.g., no Supabase URL),
-  // unless explicitly disabled with VITE_ENABLE_Sample_DATA="false"
+  // unless explicitly disabled with VITE_ENABLE_SAMPLE_DATA="false"
   enableSampleData: (
-    import.meta.env.VITE_ENABLE_Sample_DATA === 'true' ||
-    (!import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_ENABLE_Sample_DATA !== 'false')
+    import.meta.env.VITE_ENABLE_SAMPLE_DATA === 'true' ||
+    (!import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_ENABLE_SAMPLE_DATA !== 'false')
   ),
   enableDevTools: import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEV_TOOLS === 'true',
   logLevel: (import.meta.env.VITE_LOG_LEVEL as AppConfig['logLevel']) || 'info',

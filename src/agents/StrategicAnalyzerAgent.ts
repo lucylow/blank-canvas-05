@@ -113,7 +113,7 @@ class StrategicAnalyzerAgent extends BaseAgent {
 
       const processingTime = this.getProcessingTime();
 
-      return {
+      return await Promise.resolve({
         success: true,
         result: {
           total_correlations: correlations.length,
@@ -124,7 +124,7 @@ class StrategicAnalyzerAgent extends BaseAgent {
         processing_time_ms: processingTime,
         task_type: 'strategic_analysis',
         accuracy: this.calculateConfidence(correlations),
-      };
+      });
     } catch (error) {
       const processingTime = this.getProcessingTime();
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
